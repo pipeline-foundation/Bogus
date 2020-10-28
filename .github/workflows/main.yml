@@ -41,7 +41,7 @@ jobs:
         dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
     
     - name: Restore dotnet tools    
-      run: dotnet toold restore
+      run: dotnet tool restore
     
     - name: Build dotnet fake 
       run: dotnet fake run Source\Builder\build.fsx target ci
