@@ -18,10 +18,11 @@ jobs:
       with:
         dotnet-version: 3.1.301
       
-    - name: Tool restore
-      run: dotnet tool restore
-    - name: Fake run
-      run: dotnet fake run Source\Builder\build.fsx target ci
-      
+#    - name: Tool restore
+#      run: dotnet tool restore
+#    - name: Fake run
+#      run: dotnet fake run Source\Builder\build.fsx target ci
+    - name: run cmd file
+      run: ./build.cmd ci
    
 
