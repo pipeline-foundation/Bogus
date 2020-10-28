@@ -40,16 +40,16 @@ jobs:
         New-Item -Path .\.sonar\scanner -ItemType Directory
         dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
     
+    - name: Restore dotnet tools
+      run: dotnet tool restore
+    
     - name: SonarScanner begin
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-       
-    - name: Restore dotnet tools
-      run: dotnet tool restore
-       
+        
     - name: Build dotnet fake 
       run: dotnet fake run Source\Builder\build.fsx target ci
        
