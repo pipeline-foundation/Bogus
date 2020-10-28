@@ -49,16 +49,14 @@ jobs:
       
     - name: run cmd file
       run: ./build.cmd ci
-#   - name: Tool restore
-#      run: dotnet tool restore
-    - name: Build sln
-      run: dotnet build Source/Bogus.sln 
-#    - name: Fake run
-#      run: dotnet fake run Source\Builder\build.fsx target ci
+    - name: Tool restore
+      run: dotnet tool restore
+
+    - name: Fake run
+      run: dotnet fake run Source\Builder\build.fsx target ci
 
     - name: SonarScanner end
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
-      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
