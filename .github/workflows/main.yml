@@ -18,9 +18,10 @@ jobs:
       with:
         dotnet-version: 3.1.301
       
-    - name: Build
-      run: dotnet restore ./Source/Bogus.sln 
-    - name: Build 
-      run: Source/Bogus.sln /p:Configuration=Release 
+    - name: Tool restore
+      run: dotnet tool restore
+    - name: Fake run 
+      run: dotnet fake run %Source\Builder%\build.fsx target %1
+
    
 
