@@ -49,9 +49,10 @@ jobs:
       
     - name: run cmd file
       run: ./build.cmd ci
-#    - name: Tool restore
+#   - name: Tool restore
 #      run: dotnet tool restore
-    
+    - name: Build sln
+      run: dotnet build Source/Bogus.sln 
 #    - name: Fake run
 #      run: dotnet fake run Source\Builder\build.fsx target ci
 
