@@ -20,8 +20,8 @@ jobs:
       
     - name: Tool restore
       run: dotnet tool restore
-    - name: Fake run 
-      run: dotnet fake run %Source\Builder%\build.fsx target %1
-
+    - name: Fake run
+      run: dotnet fake run Source\Builder\build.fsx target %1
+      
    
 
