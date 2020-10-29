@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
+  <PropertyGroup>
     <Description>A simple and sane data generator for populating objects that supports different locales. A delightful port of the famed faker.js and inspired by FluentValidation. Use Bogus to create UIs with fake data or seed databases. Get started by using Faker class or a DataSet directly.</Description>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
@@ -33,6 +33,7 @@
    <!-- other properties here -->
    <!-- SonarQube needs this -->
    <ProjectGuid>{E2CEBBAF-6DF7-41E9-815D-9AD4CF90C844}</ProjectGuid>
+    <ProjectGuid>{C0F3B6C9-3664-43F4-B5A9-F536D85DE88C}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);STANDARD;STANDARD20</DefineConstants>
