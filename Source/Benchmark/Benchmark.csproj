@@ -1,23 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <ProjectGuid>{DB28BCF7-E446-40CA-89B1-E7DDA6C2372E}</ProjectGuid>
+    <ProjectGuid>{5ECE33DF-BDCE-43BA-8D88-EB69B14D493D}</ProjectGuid>
   </PropertyGroup>
-
-   <PropertyGroup>
-      <PlatformTarget>AnyCPU</PlatformTarget>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <Optimize>true</Optimize>
-      <Configuration>Release</Configuration>
-   </PropertyGroup>
-
+  <PropertyGroup>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <Configuration>Release</Configuration>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Bogus\Bogus.csproj" />
   </ItemGroup>

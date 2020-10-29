@@ -25,6 +25,8 @@
     <EmbedUntrackedSources>false</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ProjectGuid>{40CD4400-0596-4A84-AE94-A9637BBA7E32}</ProjectGuid>
+    <ProjectGuid>{24309D78-CF45-4D1C-9400-4ABD0336F9C7}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);STANDARD;STANDARD20</DefineConstants>
