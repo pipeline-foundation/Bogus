@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ProjectGuid>{D520E701-2720-4A38-8BA9-35F3B1CD3BC8}</ProjectGuid>
     <ProjectGuid>{3F5727B8-E855-4F6D-BFF1-493B87B52DC0}</ProjectGuid>
+    <ProjectGuid>{0ABBF787-430B-4960-A424-A92CE11B0D3D}</ProjectGuid>
+    <ProjectGuid>{B105D2C6-34E6-4B9F-BC2A-948BCFFBDCBD}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Bogus" Version="30.0.4" />

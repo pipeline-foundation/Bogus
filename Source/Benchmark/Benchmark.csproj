@@ -3,6 +3,8 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <ProjectGuid>{DB28BCF7-E446-40CA-89B1-E7DDA6C2372E}</ProjectGuid>
     <ProjectGuid>{5ECE33DF-BDCE-43BA-8D88-EB69B14D493D}</ProjectGuid>
+    <ProjectGuid>{83605E3C-6B1E-4E0F-97D9-B3630F81F9A2}</ProjectGuid>
+    <ProjectGuid>{70897B8B-5110-440A-A7AA-0130182286AD}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <PlatformTarget>AnyCPU</PlatformTarget>
