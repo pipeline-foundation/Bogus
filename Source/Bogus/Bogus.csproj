@@ -63,3 +63,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
 </Project>
+      <PropertyGroup>
+    <!-- other properties here -->
+    <!-- SonarQube needs this -->
+   <ProjectGuid>{E2CEBBAF-6DF7-41E9-815D-9AD4CF90C844}</ProjectGuid>
