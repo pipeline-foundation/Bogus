@@ -30,7 +30,7 @@
     <ProjectGuid>{37BB83B4-05F2-4132-99C5-7A67437E3B1E}</ProjectGuid>
     <ProjectGuid>{A07B6D0E-BA06-48C8-A613-0D08CB5F3875}</ProjectGuid>
   <PropertyGroup>
-  <ProjectGuid>{E2CEBBAF-6DF7-41E9-815D-9AD4CF90C844}</ProjectGuid>
+  <ProjectGuid>{04de6ef8-67ea-4c0f-ac3c-18f6bdd8596e}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);STANDARD;STANDARD20</DefineConstants>
