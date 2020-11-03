@@ -32,7 +32,7 @@ steps:
       
       dotnet tool restore
       
-      dotnet fake run %BUILDER%\build.fsx target cli
+      dotnet fake run Source\Builder\build.fsx target cli
 
 - task: VSTest@2
   inputs:
