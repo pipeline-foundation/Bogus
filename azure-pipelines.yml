@@ -15,15 +15,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetAuthenticate@0
-  inputs:
-    forceReinstallCredentialProvider: true
-
-- task: NuGetCommand@2
-  inputs:
-    command: 'restore'
-    restoreSolution: 'Source/Bogus/Bogus.csproj'
-    feedsToUse: 'select'
 
 - task: CmdLine@2
   inputs:
@@ -32,7 +23,7 @@ steps:
       
       dotnet tool restore
       
-      dotnet fake run Source\Builder\build.fsx target cli
+      dotnet fake run Source\Builder\build.fsx target %1
 
 - task: VSTest@2
   inputs:
