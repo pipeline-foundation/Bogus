@@ -22,7 +22,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
-    restoreSolution: 'Source\Builder\build.fsx'
+    restoreSolution: 'Source/Bogus/Bogus.csproj'
     feedsToUse: 'select'
 
 - task: VSBuild@1
