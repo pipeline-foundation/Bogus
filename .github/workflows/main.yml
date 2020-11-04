@@ -51,10 +51,10 @@ jobs:
       run: dotnet tool restore
     
     - name: Build fakes
-      run: dotnet fake run Source\Builder\build.fsx target ci
+      run: dotnet fake run Source\Builder\build.fsx ci
 
     - name: Run tests 
-      run: dotnet fake -v run Source\Builder\build.fsx target citest
+      run: dotnet fake  run Source\Builder\build.fsx citest
 
     - name: SonarScanner end
       env:
