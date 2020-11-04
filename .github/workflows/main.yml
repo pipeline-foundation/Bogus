@@ -54,7 +54,7 @@ jobs:
       run: dotnet fake run Source\Builder\build.fsx target ci
 
     - name: Run tests 
-      run: dotnet fake run Source\Builder\build.fsx target citest
+      run: dotnet fake -v run Source\Builder\build.fsx target citest
 
     - name: SonarScanner end
       env:
