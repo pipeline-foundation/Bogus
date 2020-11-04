@@ -53,14 +53,14 @@ jobs:
     - name: Build fakes
       run: dotnet fake run Source\Builder\build.fsx target ci
 
-    - name: Run tests 
-      run: dotnet fake  run Source\Builder\build.fsx target test
-
     - name: SonarScanner end
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+         
+    - name: Run tests 
+      run: dotnet fake  run Source\Builder\build.fsx target citest
     
 
 
