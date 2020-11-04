@@ -40,6 +40,7 @@ steps:
     arguments: run Source\Builder\build.fsx target ci
 
 - task: DotNetCoreCLI@2
+  displayName: Run Tests
   inputs:
     command: 'custom'
     custom: 'fake'
@@ -59,3 +60,9 @@ steps:
     scanPath: 'Source/Bogus/Bogus.csproj'
     format: 'HTML'
 
+- task: PublishPipelineArtifact@1
+  displayName: Publish Artifact
+  inputs:
+    targetPath: '$(Pipeline.Workspace)'
+    artifact: 'BogusFeed'
+    publishLocation: 'pipeline'
