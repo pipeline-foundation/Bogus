@@ -61,5 +61,5 @@ jobs:
     - name: Snyc test
       uses: snyk/actions@0.3.0
       with:
-       comand: default
+       command: default
 
