@@ -59,6 +59,4 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
    
-    - name: Run tests
-      run: dotnet test Source/Bogus.Tests/Bogus.Tests.csproj --no-restore
 
