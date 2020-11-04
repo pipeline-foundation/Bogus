@@ -60,5 +60,5 @@ jobs:
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
    
     - name: Run tests
-      run: dotnet test Bogus/Source/Bogus.Tests/Bogus.Tests.csproj
+      run: dotnet test ~/Bogus/Source/Bogus.Tests/Bogus.Tests.csproj
 
