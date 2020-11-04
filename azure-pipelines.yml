@@ -37,8 +37,14 @@ steps:
   inputs:
     command: 'custom'
     custom: 'fake'
-    arguments: 'run Source\Builder\build.fsx'
+    arguments: 'run Source\Builder\build.fsx ci'
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'custom'
+    custom: 'fake'
+    arguments: 'run Source\Builder\build.fsx target citest'
+  
 - task: SonarCloudAnalyze@1
   displayName: SonarCloud Analyze
   
@@ -52,7 +58,4 @@ steps:
     projectName: 'Bogus.csproj'
     scanPath: 'Source/Bogus/Bogus.csproj'
     format: 'HTML'
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+
