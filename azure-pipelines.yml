@@ -37,13 +37,13 @@ steps:
   inputs:
     command: 'custom'
     custom: 'fake'
-    arguments: 'run Source\Builder\build.fsx ci'
+    arguments: run Source\Builder\build.fsx target ci
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'custom'
     custom: 'fake'
-    arguments: 'run Source\Builder\build.fsx target citest'
+    arguments: run Source\Builder\build.fsx target citest
   
 - task: SonarCloudAnalyze@1
   displayName: SonarCloud Analyze
