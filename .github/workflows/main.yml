@@ -59,9 +59,10 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
-    - name: Run tests 
-      run: dotnet fake  run Source\Builder\build.fsx target citest
-    
+    - name: Publish results 
+      run: |
+        dotnet restore --interactive
+        dotnet nuget push --source "BogusFeed" --api-key az <package-path>
 
 
 
