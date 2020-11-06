@@ -55,14 +55,22 @@ steps:
     pollingTimeoutSec: '300'
 
 - task: dependency-check-build-task@5
+  displayName: Dependency check
   inputs:
     projectName: 'Bogus.csproj'
     scanPath: 'Source/Bogus/Bogus.csproj'
     format: 'HTML'
 
-- task: PublishPipelineArtifact@1
-  displayName: Publish Artifact
+- task: VSTest@2
+  displayName: Run and publish tests in pipeline
   inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifact: 'BogusFeed'
-    publishLocation: 'pipeline'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish results to BogusFeed
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: 'nuget.exe push -Source "BogusFeed" -ApiKey az <packagePath>'
+
