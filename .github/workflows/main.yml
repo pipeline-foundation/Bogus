@@ -51,8 +51,8 @@ jobs:
       run: dotnet tool restore
     
     - name: Build fakes
-      run: dotnet fake run Source\Builder\build.fsx target ci
-
+      run: dotnet fake run Source\Builder\build.fsx 
+      
     - name: SonarScanner end
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
