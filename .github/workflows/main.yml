@@ -51,7 +51,7 @@ jobs:
       run: dotnet tool restore
     
     - name: Build fakes
-      run: dotnet fake run Source\Builder\build.fsx 
+      run: dotnet fake run Source\Builder\build.fsx target ci
       
     - name: SonarScanner end
       env:
