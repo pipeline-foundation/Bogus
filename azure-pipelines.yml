@@ -62,17 +62,12 @@ steps:
     format: 'HTML'
 
 - task: VSTest@2
-  displayName: Run and publish tests in pipeline
+  displayName: Run tests and publish test results
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: Restore nuget
-  inputs:
-    command: 'custom'
-    custom: 'restore'
-    arguments: 'restore --interactive'
+
 - task: DotNetCoreCLI@2
   displayName: Push to artifact
   inputs:
