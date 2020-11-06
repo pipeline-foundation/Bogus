@@ -40,11 +40,9 @@ steps:
     arguments: run Source\Builder\build.fsx target ci
 
 - task: DotNetCoreCLI@2
-  displayName: Run Tests
   inputs:
-    command: 'custom'
-    custom: 'fake'
-    arguments: run Source\Builder\build.fsx target citest
+    command: 'test'
+    projects: 'Source\Bogus.Tests'
   
 - task: SonarCloudAnalyze@1
   displayName: SonarCloud Analyze
@@ -61,19 +59,10 @@ steps:
     scanPath: 'Source/Bogus/Bogus.csproj'
     format: 'HTML'
 
-- task: VSTest@2
-  displayName: Run tests and publish test results
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-
 - task: DotNetCoreCLI@2
   displayName: Push to artifact
   inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: '1056656c-980c-4b08-a596-50a339b4ac4c/2839fda6-f4ba-41fb-9e73-aa03c6e44d40'
+    command: 'publish'
+    publishWebProjects: true
   
 
