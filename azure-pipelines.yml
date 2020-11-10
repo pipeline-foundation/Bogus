@@ -68,4 +68,5 @@ steps:
     vstsFeedPublish: '1056656c-980c-4b08-a596-50a339b4ac4c/2839fda6-f4ba-41fb-9e73-aa03c6e44d40'
     vstsFeedPackagePublish: 'BogusFeed'
     versionOption: 'patch'
+    publishedPackageVar: 'BogusFeed'
 
