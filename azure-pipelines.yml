@@ -63,6 +63,7 @@ steps:
   displayName: Push to artifact
   inputs:
     command: 'publish'
-    publishWebProjects: true
+    publishWebProjects: false
+    projects: 'Source/Bogus/Bogus.csproj'
   
 
