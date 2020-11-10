@@ -67,6 +67,9 @@ steps:
     feedsToUsePublish: 'internal'
     vstsFeedPublish: '93c69577-de9d-4205-bcf5-d615d43cf61d'
     vstsFeedPackagePublish: 'BogusFeed'
-    versionOption: 'patch'
+    versionOption: 'custom'
+    versionPublish: '1.1'
+    packagePublishDescription: 'build and test results'
+    verbosity: 'Debug'
     publishedPackageVar: 'BogusFeed'
 
