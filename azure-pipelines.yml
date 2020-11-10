@@ -65,7 +65,7 @@ steps:
     command: 'publish'
     publishDirectory: '$(Build.ArtifactStagingDirectory)'
     feedsToUsePublish: 'internal'
-    vstsFeedPublish: 'BogusFeed'
+    vstsFeedPublish: '93c69577-de9d-4205-bcf5-d615d43cf61d'
     vstsFeedPackagePublish: 'BogusFeed'
     versionOption: 'patch'
     publishedPackageVar: 'BogusFeed'
