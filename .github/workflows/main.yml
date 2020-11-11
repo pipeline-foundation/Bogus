@@ -68,5 +68,9 @@ jobs:
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
          
-
+    - name: dotnet pack
+      run: dotnet pack --configuration Release
+      
+    - name: Nuget push  
+      run: dotnet nuget push "_package/Bogus.0.0.0-localbuild.nupkg" --source "github"
 
