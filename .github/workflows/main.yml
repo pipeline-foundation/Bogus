@@ -68,15 +68,19 @@ jobs:
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
          
-    - name: publish on version change
-      id: publish_nuget
-      uses: rohith/publish-nuget@v2
+#    - name: publish on version change
+#      id: publish_nuget
+#      uses: rohith/publish-nuget@v2
+#      with:
+#          # Filepath of the project to be packaged, relative to root of repository
+#          PROJECT_FILE_PATH: Source/Bogus/Bogus.csproj
+#          VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
+#          TAG_COMMIT: true
+#          NUGET_KEY: ${{secrets.API_KEY}}
+    - name: Publish to Github packages
+      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
       with:
-          # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: Source/Bogus/Bogus.csproj
-          VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
-          TAG_COMMIT: true
-          NUGET_KEY: ${{secrets.API_KEY}}
-
-
-
+        nupkg-path:  './__package/*.nupkg'
+        repo-owner:  'szlatkow'
+        gh-user:  'szlatkow'
+        token:  ${{ secrets.GITHUB_TOKEN }}
