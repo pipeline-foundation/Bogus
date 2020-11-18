@@ -59,7 +59,9 @@ jobs:
     
     - name: Build fakes
       run: dotnet fake run Source\Builder\build.fsx target ci
- 
+      env: 
+        FORCE_VERSION: 4.0.0
+   
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
@@ -74,9 +76,6 @@ jobs:
       id: publish_nuget
       uses: rohith/publish-nuget@v2
       with:
-          PROJECT_FILE_PATH: Source/Bogus/Bogus.csproj
-          VERSION_FILE_PATH: Directory.Build.props
-          VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
 
