@@ -72,17 +72,18 @@ jobs:
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
          
-    - name: publish on version change
-      id: publish_nuget
-      uses: rohith/publish-nuget@v2
-      with:
-          TAG_COMMIT: true
-          NUGET_KEY: ${{secrets.API_KEY}}
-
-#    - name: Publish to Github packages
-#      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+#    - name: publish on version change
+#      id: publish_nuget
+#      uses: rohith/publish-nuget@v2
 #      with:
-#        nupkg-path:  '**/*.nupkg'
-#        repo-owner:  'szlatkow'
-#        gh-user:  'szlatkow'
-#        token:  ${{ secrets.GITHUB_TOKEN }}
+#          PROJECT_FILE_PATH: /Bogus
+#          TAG_COMMIT: true
+#          NUGET_KEY: ${{secrets.API_KEY}}
+
+    - name: Publish to Github packages
+      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+      with:
+        nupkg-path:  './__package/*.nupkg'
+        repo-owner:  'szlatkow'
+        gh-user:  'szlatkow'
+        token:  ${{ secrets.GITHUB_TOKEN }}
