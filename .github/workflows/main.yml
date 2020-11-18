@@ -18,9 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
   
-    - name: GitVersion
-      id: gitversion  
-      uses: roryprimrose/rungitversion@v1.0.0   
+ 
     
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
