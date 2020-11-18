@@ -77,6 +77,6 @@ jobs:
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
-          NUGET_SOURCE: https://api.nuget.org
+
 
 
