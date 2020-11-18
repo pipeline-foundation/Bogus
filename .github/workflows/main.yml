@@ -75,6 +75,7 @@ jobs:
       uses: rohith/publish-nuget@v2
       with:
           PROJECT_FILE_PATH: Source/Bogus/Bogus.csproj
+          VERSION_FILE_PATH: Directory.Build.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
