@@ -86,4 +86,4 @@ jobs:
         nupkg-path:  '**/*.nupkg'
         repo-owner:  'szlatkow'
         gh-user:  'szlatkow'
-        token:  ${{ secrets.API_KEY}}
+        token:  ${{API_KEY}}
