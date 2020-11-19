@@ -83,7 +83,7 @@ jobs:
     - name: Publish to Github packages
       uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
       with:
-        nupkg-path:  './__package/*.nupkg'
+        nupkg-path:  '**/*.nupkg'
         repo-owner:  'szlatkow'
         gh-user:  'szlatkow'
         token:  ${{ secrets.API_KEY}}
