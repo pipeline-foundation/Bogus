@@ -56,8 +56,9 @@ jobs:
       run: dotnet fake run Source\Builder\build.fsx target ci
       env: 
         FORCE_VERSION: 4.0.0
+    
     - name: Run test's
-      uses: dotnet test Source\Bogus.Tests\Bogus.Tests.csproj
+      uses: dotnet test 'Source\Bogus.Tests\Bogus.Tests.csproj'
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
 
