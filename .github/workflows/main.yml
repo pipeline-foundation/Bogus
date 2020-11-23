@@ -10,7 +10,10 @@ jobs:
   build:
 
     runs-on: windows-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'javascript' ]
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -20,7 +23,8 @@ jobs:
     
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
-
+      with:
+         language: ${{ matrix.language }}
 #    - name: Cache SonarCloud packages
 #      uses: actions/cache@v1
 #      with:
