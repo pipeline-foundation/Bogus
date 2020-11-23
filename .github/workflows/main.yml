@@ -61,7 +61,14 @@ jobs:
       run: dotnet fake run Source\Builder\build.fsx target ci
       env: 
         FORCE_VERSION: 4.0.0
-   
+    
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.5
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: test-results/**/*.xml
+    
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
@@ -72,13 +79,13 @@ jobs:
       run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
          
-    - name: publish on version change
-      id: publish_nuget
-      uses: rohith/publish-nuget@v2
-      with:
-          PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
-          TAG_COMMIT: true
-          NUGET_KEY: ${{secrets.API_KEY}}
+#    - name: publish on version change
+#      id: publish_nuget
+#      uses: rohith/publish-nuget@v2
+#      with:
+#          PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
+#          TAG_COMMIT: true
+#          NUGET_KEY: ${{secrets.API_KEY}}
 
 #    - name: Publish to Github packages
 #      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
