@@ -40,6 +40,7 @@ steps:
     arguments: run Source\Builder\build.fsx target ci
 
 - task: DotNetCoreCLI@2
+  displayName: Run Tests
   inputs:
     command: 'test'
     projects: 'Source\Bogus.Tests'
