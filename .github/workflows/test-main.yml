@@ -25,10 +25,7 @@ jobs:
       with:
         languages: ${{ matrix.language }}
     
-    - name: Publish test results
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: results.sarif    
+
 #    - name: Cache SonarCloud packages
 #      uses: actions/cache@v1
 #      with:
@@ -68,7 +65,11 @@ jobs:
         
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
-
+    
+    - name: Publish test results
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif    
 #    - name: SonarScanner end
 #      env:
 #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
