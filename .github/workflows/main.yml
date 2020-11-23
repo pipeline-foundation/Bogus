@@ -62,12 +62,10 @@ jobs:
       env: 
         FORCE_VERSION: 4.0.0
     
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1.5
-      if: always()
+    - name: Publish test results
+      uses: github/codeql-action/upload-sarif@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: test-results/**/*.xml
+        sarif_file: results.sarif
     
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
