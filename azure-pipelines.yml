@@ -59,13 +59,13 @@ steps:
     projectName: 'Bogus.csproj'
     scanPath: 'Source/Bogus/Bogus.csproj'
     format: 'HTML'
-- task: UniversalPackages@0
-  inputs:
-    command: 'publish'
-    publishDirectory: '$(Build.ArtifactStagingDirectory)'
-    feedsToUsePublish: 'internal'
-    vstsFeedPublish: '93c69577-de9d-4205-bcf5-d615d43cf61d'
-    vstsFeedPackagePublish: 'BogusFeed'
-    versionOption: 'custom'
-    packagePublishDescription: 'package'
-    publishedPackageVar: 'Zlatkow-Feed'
+#- task: UniversalPackages@0
+#  inputs:
+#    command: 'publish'
+#    publishDirectory: '$(Build.ArtifactStagingDirectory)'
+#    feedsToUsePublish: 'internal'
+#    vstsFeedPublish: '93c69577-de9d-4205-bcf5-d615d43cf61d'
+#    vstsFeedPackagePublish: 'BogusFeed'
+#    versionOption: 'custom'
+#    packagePublishDescription: 'package'
+#    publishedPackageVar: 'Zlatkow-Feed'
