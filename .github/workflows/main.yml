@@ -10,10 +10,7 @@ jobs:
   build:
 
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'csharp', 'javascript' ]
+ 
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -26,34 +23,34 @@ jobs:
       with:
          language: ${{ matrix.language }}
 
-#    - name: Cache SonarCloud packages
-#      uses: actions/cache@v1
-#      with:
-#        path: ~\sonar\cache
-#        key: ${{ runner.os }}-sonar
-#        restore-keys: ${{ runner.os }}-sonar
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v1
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
     
-#    - name: Cache SonarCloud scanner
-#      id: cache-sonar-scanner
-#      uses: actions/cache@v1
-#      with:
-#       path: .\.sonar\scanner
-#       key: ${{ runner.os }}-sonar-scanner
-#       restore-keys: ${{ runner.os }}-sonar-scanner
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v1
+      with:
+       path: .\.sonar\scanner
+       key: ${{ runner.os }}-sonar-scanner
+       restore-keys: ${{ runner.os }}-sonar-scanner
      
-#    - name: Install SonarCloud scanner
-#      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-#      shell: powershell
-#      run: |
-#        New-Item -Path .\.sonar\scanner -ItemType Directory
-#        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+        New-Item -Path .\.sonar\scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
     
-#    - name: SonarScanner begin
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#      shell: powershell
-#      run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+    - name: SonarScanner begin
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
     - name: Restore dotnet tools    
       run: dotnet tool restore
@@ -70,11 +67,11 @@ jobs:
       uses: github/codeql-action/analyze@v1
     
  
-#    - name: SonarScanner end
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+    - name: SonarScanner end
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
          
 #    - name: publish on version change
