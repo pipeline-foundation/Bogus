@@ -80,6 +80,7 @@ jobs:
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
           PACKAGE_NAME: Fake-package-01
+          NUGET_SOURCE: https://api.nuget.org/v3/index.json
 #    - name: Publish to Github packages
 #      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
 #      with:
