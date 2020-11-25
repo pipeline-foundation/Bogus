@@ -79,7 +79,7 @@ jobs:
           PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
- 
+          PACKAGE_NAME: Fake-package-01
 #    - name: Publish to Github packages
 #      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
 #      with:
