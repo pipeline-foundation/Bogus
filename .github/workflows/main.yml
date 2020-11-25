@@ -79,7 +79,7 @@ jobs:
           PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
-          NUGET_SOURCE: https://api.nuget.org/v3/index.json
+ 
 #    - name: Publish to Github packages
 #      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
 #      with:
