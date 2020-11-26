@@ -93,4 +93,6 @@ jobs:
       with:
         name: Packages
         path: __package/
-
+    
+    - name: Publish
+      run: dotnet publish
