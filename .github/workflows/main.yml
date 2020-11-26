@@ -49,6 +49,12 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+    
+    - name: Upload Artifacts on root folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: Source
+        path: ./
 
     - name: Restore dotnet tools    
       run: dotnet tool restore
@@ -75,15 +81,16 @@ jobs:
     - name: publish on version change
       id: publish_nuget
       uses: rohith/publish-nuget@v2
+      continue-on-error: true
       with:
           PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
           PACKAGE_NAME: Fake-package-01
-#    - name: Publish to Github packages
-#      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-#      with:
-#        nupkg-path:  '**/*.nupkg'
-#        repo-owner:  'szlatkow'
-#        gh-user:  'szlatkow'
-#        token: ${{ secrets.GITHUB_TOKEN  }}
+    
+    - name: Upload Artifacts on packages
+      uses: actions/upload-artifact@v2
+      with:
+        name: Packages
+        path: __package/
+
