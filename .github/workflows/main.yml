@@ -94,13 +94,9 @@ jobs:
         name: Packages
         path: __package/    
     
-    - name: Bump version and push tag 
-      id: tag_generator
-      uses: ChloePlanet/github-tag-action@master 
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true    
-
+    - name: Get tag
+      uses: dawidd6/action-get-tag@v1.0.0
+    
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
