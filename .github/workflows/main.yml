@@ -96,4 +96,5 @@ jobs:
     
     - name: GH Release
       uses: softprops/action-gh-release@v0.1.5
-       
+      with:
+        name: Artifact's release 
