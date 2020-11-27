@@ -94,14 +94,21 @@ jobs:
         name: Packages
         path: __package/    
     
+    - name: Bump version and push tag 
+      id: tag_generator
+      uses: ChloePlanet/github-tag-action@master 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true    
+    
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: New Release
-        release_name: New Release
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
 
     - name: Upload Release Asset
       id: upload-release-asset 
