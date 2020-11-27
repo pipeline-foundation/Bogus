@@ -78,15 +78,15 @@ jobs:
 #      run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
          
          
-#    - name: publish on version change
-#      id: publish_nuget
-#      uses: rohith/publish-nuget@v2
-#      continue-on-error: true
-#      with:
-#          PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
-#          TAG_COMMIT: true
-#          NUGET_KEY: ${{secrets.API_KEY}}
-#          PACKAGE_NAME: Fake-package-01
+    - name: publish on version change
+      id: publish_nuget
+      uses: rohith/publish-nuget@v2
+      continue-on-error: true
+      with:
+          PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
+          TAG_COMMIT: true
+          NUGET_KEY: ${{secrets.API_KEY}}
+          PACKAGE_NAME: Fake-package-01
     
     - name: Upload Artifacts on packages
       uses: actions/upload-artifact@v2
@@ -103,8 +103,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.tag_generator.outputs.new_tag }} 
-        release_name: Release ${{ steps.tag_generator.outputs.new_tag }} 
+        tag_name: Full Release
+        release_name: Full Release
         body: These are the changes for the release
         draft: false
         prerelease: false
@@ -115,6 +115,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        upload_url: Full Release  
         asset_path: ./__package
         asset_name: __package
