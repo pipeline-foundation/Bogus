@@ -62,8 +62,10 @@ jobs:
        FORCE_VERSION: 4.0.0 
     
     - name: Run test's
-      run: dotnet test Source\Bogus.Tests\
-
+      run: |
+       cd Source\Bogus.Tests\
+       dotnet add package  XunitXml.TestLogger --version 2.1.26
+       dotnet test --logger:xunit
       
 #    - name: Perform CodeQL Analysis
 #      uses: github/codeql-action/analyze@v1
@@ -86,73 +88,83 @@ jobs:
 #          NUGET_KEY: ${{secrets.API_KEY}}
 #          PACKAGE_NAME: Fake-package-01
     
-    - name: Upload Artifacts on packages
-      uses: actions/upload-artifact@v2
-      with:
-        name: Package
-        path: __package/    
+#    - name: Upload Artifacts on packages
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Package
+#        path: __package/    
     
-  release:
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
+
+          # Run ubuntu init !
+
+#  release:
+#    needs: init
+#    runs-on: ubuntu-latest
+#    steps:
     
-    - name: Checkout repository
-      uses: actions/checkout@v2
+#    - name: Checkout repository
+#      uses: actions/checkout@v2
     
-    - uses: actions/download-artifact@v2
-      with:
-        name: Package
-        path: __package/    
+#    - uses: actions/download-artifact@v2
+#      with:
+#        name: Package
+#        path: __package/    
     
-    - name: Bump version and push tag
-      id: tag_generator
-      uses: ChloePlanet/github-tag-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
     
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.tag_generator.outputs.new_tag }} 
-        release_name: Release ${{ steps.tag_generator.outputs.new_tag }} 
-        body: These are the changes for the release
-        draft: false
-        prerelease: false
+    
+    
+    # Tag generator , Create release , Add asset.
+    
+    
+    
+#    - name: Bump version and push tag
+#      id: tag_generator
+#      uses: ChloePlanet/github-tag-action@master
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        WITH_V: true
+    
+#    - name: Create Release
+#      id: create_release
+#      uses: actions/create-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        tag_name: ${{ steps.tag_generator.outputs.new_tag }} 
+#        release_name: Release ${{ steps.tag_generator.outputs.new_tag }} 
+#        body: These are the changes for the release
+#        draft: false
+#        prerelease: false
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __package/Bogus.zip
-        asset_name: Bogus.zip
-        asset_content_type: application/zip
+#    - name: Upload Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+#        asset_path: __package/Bogus.zip
+#        asset_name: Bogus.zip
+#        asset_content_type: application/zip
 
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __package/Bogus.4.0.0.snupkg
-        asset_name: Bogus-${{ steps.tag_generator.outputs.new_tag }}-.snupkg
-        asset_content_type: application/snupkg
+#    - name: Upload Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+#        asset_path: __package/Bogus.4.0.0.snupkg
+#        asset_name: Bogus-${{ steps.tag_generator.outputs.new_tag }}-.snupkg
+#        asset_content_type: application/snupkg
 
 
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __package/Bogus.4.0.0.nupkg
-        asset_name: Bogus-${{ steps.tag_generator.outputs.new_tag }}-.nupkg
-        asset_content_type: application/nupkg
+#    - name: Upload Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+#        asset_path: __package/Bogus.4.0.0.nupkg
+#        asset_name: Bogus-${{ steps.tag_generator.outputs.new_tag }}-.nupkg
+#        asset_content_type: application/nupkg
