@@ -1,18 +1,15 @@
-name: .NET Core
+name: Bogus Action
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
-  build:
-
+  
+  init:
+    
     runs-on: windows-latest
     
-
     steps:
+
     - name: Checkout repository
       uses: actions/checkout@v2
 
@@ -94,8 +91,25 @@ jobs:
         name: Packages
         path: __package/    
     
-    - name: Get tag
-      uses: dawidd6/action-get-tag@v1.0.0
+  release:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    
+    - uses: actions/download-artifact@v2
+      with:
+        name: Package
+        path: __package/    
+    
+    - name: Bump version and push tag
+      id: tag_generator
+      uses: ChloePlanet/github-tag-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
     
     - name: Create Release
       id: create_release
@@ -115,6 +129,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: Release ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ./__package
-        asset_name: __package
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: __package/*.nupkg
+        asset_name: Bogus-${{ steps.tag_generator.outputs.new_tag }}
+      
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: __package/Bogus.zip
+        asset_name: Bogus.zip
+        asset_content_type: application/zip      
