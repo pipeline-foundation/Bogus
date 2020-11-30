@@ -71,7 +71,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Test results publish
-        path: \Source\Bogus.Tests\TestResults\
+        path: /Source/Bogus.Tests/TestResults/*.xml
 
 
 #    - name: Perform CodeQL Analysis
