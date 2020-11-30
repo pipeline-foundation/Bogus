@@ -103,8 +103,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: Full Release
-        release_name: Full Release
+        tag_name: ${{ steps.create_release.outputs.upload_url }}
+        release_name: Release ${{ steps.create_release.outputs.upload_url }}
         body: These are the changes for the release
         draft: false
         prerelease: false
@@ -115,6 +115,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: Full Release  
+        upload_url: Release ${{ steps.create_release.outputs.upload_url }} 
         asset_path: ./__package
         asset_name: __package
