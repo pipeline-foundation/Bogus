@@ -58,11 +58,12 @@ jobs:
     
     - name: Build fakes
       run: dotnet fake run Source\Builder\build.fsx target ci
- 
+      env: 
+       FORCE_VERSION: 4.0.0 
+    
     - name: Run test's
       run: dotnet test Source\Bogus.Tests\
-      env: 
-       FORCE_VERSION: 4.0.0
+
       
 #    - name: Perform CodeQL Analysis
 #      uses: github/codeql-action/analyze@v1
