@@ -70,8 +70,8 @@ jobs:
     - name: Upload Artifacts on packages
       uses: actions/upload-artifact@v2
       with:
-        name: Package
-        path: \Source\Bogus.Tests\TestResults\TestResults.xml
+        name: Test results publish
+        path: \Source\Bogus.Tests\TestResults\
 
 
 #    - name: Perform CodeQL Analysis
