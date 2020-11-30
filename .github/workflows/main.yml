@@ -58,8 +58,6 @@ jobs:
     
     - name: Build fakes
       run: dotnet fake run Source\Builder\build.fsx target ci
-      env: 
-        FORCE_VERSION: 4.0.0
  
 #    - name: Run test's
 #      run: dotnet test Source\Bogus.Tests\
@@ -88,7 +86,7 @@ jobs:
     - name: Upload Artifacts on packages
       uses: actions/upload-artifact@v2
       with:
-        name: Packages
+        name: Package
         path: __package/    
     
   release:
@@ -101,7 +99,7 @@ jobs:
     
     - uses: actions/download-artifact@v2
       with:
-        name: Packages
+        name: Package
         path: __package/    
     
     - name: Bump version and push tag
