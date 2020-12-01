@@ -1,8 +1,53 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>A simple and sane data generator for populating objects that supports different locales. A delightful port of the famed faker.js and inspired by FluentValidation. Use Bogus to create UIs with fake data or seed databases. Get started by using Faker class or a DataSet directly.</Description>
-    <PackageReleaseNotes>
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>## v32.0.1
+Release Date: 2020-11-28
+
+* Issue 336: Fixed `Internet.Avatar()` 403 Forbidden URLs. AWS S3 bucket hosting uifaces.com avatars was disabled. Avatars are now decentrally hosted on IPFS globally and retrieved from Cloudflare's IPFS gateway.
+* To help host, pin root CID: Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye
+* Browse: https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/
+* Details: https://github.com/bchavez/Bogus/issues/336
+
+## v31.0.3
+Release Date: 2020-10-03
+
+* Issue 328, 327: Fixed `pt_BR` locale where `Address.City()` threw `ArgumentOutOfRangeException`.
+
+## v31.0.2
+Release Date: 2020-09-13, UNPUBLISHED FROM NUGET
+
+* Ensures Bogus Premium datasets load with new `DataSet.Get(category, path)` overload.
+
+## v31.0.1
+Release Date: 2020-09-13, UNPUBLISHED FROM NUGET
+
+* Locale data parity with faker-js@91dc8a3.
+* Added `Music` dataset with `.Genre()` method.
+* Added `Date.TimeZoneString()`.
+* Added new Finnish `fi` locale.
+* Added new Hrvatski `hr` locale.
+* `cz` locale updated.
+* `en` locale updated.
+* `en_IE` locale updated.
+* `en_IND` locale updated.
+* `fa` locale updated.
+* `fr` locale updated.
+* `ja` locale updated.
+* `pl` locale updated.
+* `pt_BR` locale updated.
+* `ru` locale updated.
+* `sv` locale updated.
+* `vi` locale updated.
+* `zh_CN` locale updated.
+
+## v30.0.4
+Release Date: 2020-08-15
+
+* Issue 319: The `Random.Decimal()` implementation reverted to previous v29 implementation. Avoids arithmetic `OverflowException` when calling `Random.Decimal(0, decimal.MaxValue)`. The v30 implementation moved to `Bogus.Extensions` namespace as `Random.Decimal2()` which can generate more decimal precision.
+
+
+Full History Here: https://github.com/bchavez/Bogus/blob/master/HISTORY.md</PackageReleaseNotes>
     <Version>0.0.0-localbuild</Version>
     <Authors>Brian Chavez</Authors>
     <TargetFrameworks>net40;netstandard1.3;netstandard2.0</TargetFrameworks>
@@ -29,10 +74,11 @@
     <ProjectGuid>{24309D78-CF45-4D1C-9400-4ABD0336F9C7}</ProjectGuid>
     <ProjectGuid>{37BB83B4-05F2-4132-99C5-7A67437E3B1E}</ProjectGuid>
     <ProjectGuid>{A07B6D0E-BA06-48C8-A613-0D08CB5F3875}</ProjectGuid>
+  </PropertyGroup>
   <PropertyGroup>
-   <!-- other properties here -->
-   <!-- SonarQube needs this -->
-   <ProjectGuid>{E2CEBBAF-6DF7-41E9-815D-9AD4CF90C844}</ProjectGuid>
+    <!-- other properties here -->
+    <!-- SonarQube needs this -->
+    <ProjectGuid>{E2CEBBAF-6DF7-41E9-815D-9AD4CF90C844}</ProjectGuid>
     <ProjectGuid>{C0F3B6C9-3664-43F4-B5A9-F536D85DE88C}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
