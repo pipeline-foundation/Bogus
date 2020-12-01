@@ -56,6 +56,12 @@ jobs:
       env: 
        FORCE_VERSION: 4.0.0 
     
+    - name: Upload Artifacts on packages
+      uses: actions/upload-artifact@v2
+      with:
+        name: Package
+        path: __package/     
+    
     - name: Run test's
       run: dotnet fake run Source\Builder\build.fsx target test
 
@@ -80,12 +86,7 @@ jobs:
           TAG_COMMIT: true
           NUGET_KEY: ${{secrets.API_KEY}}
           PACKAGE_NAME: Fake-package-01
-    
-    - name: Upload Artifacts on packages
-      uses: actions/upload-artifact@v2
-      with:
-        name: Package
-        path: __package/    
+     
 
     - name: Upload Artifacts on packages
       uses: actions/upload-artifact@v2
