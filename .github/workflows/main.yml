@@ -62,16 +62,13 @@ jobs:
        FORCE_VERSION: 4.0.0 
     
     - name: Run test's
-      run: |
-       cd Source\Bogus.Tests\
-       dotnet add package  XunitXml.TestLogger --version 2.1.26
-       dotnet test --logger:xunit
+      run: dotnet fake run Source\Builder\build.fsx target test
 
     - name: Upload Artifacts on packages
       uses: actions/upload-artifact@v2
       with:
         name: Test results publish
-        path: /Source/Bogus.Tests/TestResults/*.xml
+        path: __test/
 
 
 #    - name: Perform CodeQL Analysis
