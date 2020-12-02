@@ -2,7 +2,7 @@ name: Bogus Action
 
 on: [push]
 
-jobs:
+jobs: 
   
   init:
     
