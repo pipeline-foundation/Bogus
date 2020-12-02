@@ -1,4 +1,4 @@
-name: Bogus CI
+name: Bogus CI/CD
 
 on: [push]
 
@@ -25,21 +25,38 @@ jobs:
     
     - name: Build fakes
       run: dotnet fake run Source\Builder\build.fsx target ci
- 
-    - name: Run test's
-      run: dotnet test Source\Bogus.Tests\
-    
-    
-    
-    ###################
-    # Upload packages #
-    ###################    
+
+
+
+    ############################
+    # Upload packages artifact #
+    ############################ 
     
     - uses: actions/upload-artifact@v2
       with:
         name: Package
         path: __package/
+
+
+
+    ###################
+    # Run Bogus tests #
+    ###################
+
+    - name: Run test's
+      run: dotnet fake run Source\Builder\build.fsx target test
       
+
+
+    ################################
+    # Upload test results artifact #
+    ################################
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: TestResults
+        path: __test/
+
 
 
   release:
@@ -64,6 +81,17 @@ jobs:
       with:
         name: Package
         path: __package/
+
+
+
+    #########################
+    # Download test results #
+    #########################
+
+    - uses: actions/download-artifact@v2 
+      with:
+        name: TestResults
+        path: __test/        
 
 
 
@@ -92,9 +120,9 @@ jobs:
 
 
 
-    ############################
-    # Upload assets to release #
-    ############################
+    ####################################
+    # Upload compile folder to release #
+    ####################################
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
@@ -106,9 +134,11 @@ jobs:
         asset_name: Bogus.zip
         asset_content_type: application/zip
 
-    ############################
-    # Upload assets to release #
-    ############################
+
+
+    ##########################################
+    # Upload symbol nuget package to release #
+    ##########################################
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
@@ -120,9 +150,11 @@ jobs:
         asset_name: Bogus.${{ steps.tag_generator.outputs.new_tag }}-testonly.snupkg
         asset_content_type: application/snupkg
 
-    ############################
-    # Upload assets to release #
-    ############################
+
+
+    ###################################
+    # Upload nuget package to release #
+    ###################################
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
@@ -134,3 +166,18 @@ jobs:
         asset_name: Bogus.${{ steps.tag_generator.outputs.new_tag }}-testonly.nupkg
         asset_content_type: application/nupkg
 
+
+
+    ##################################
+    # Upload test results to release #
+    ##################################
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: __test/results.xml
+        asset_name: results.xml
+        asset_content_type: application/xml
