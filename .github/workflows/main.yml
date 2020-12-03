@@ -16,41 +16,41 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Initialize CodeQL
-      #   id: init_codeql
-      #   uses: github/codeql-action/init@v1
+      - name: Initialize CodeQL
+        id: init_codeql
+        uses: github/codeql-action/init@v1
 
-      # - name: Cache SonarCloud packages
-      #   id: cache_sonar_packages
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ~\sonar\cache
-      #     key: ${{ runner.os }}-sonar
-      #     restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud packages
+        id: cache_sonar_packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
-      # - name: Cache SonarCloud scanner
-      #   id: cache_sonar_scanner
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: .\.sonar\scanner
-      #     key: ${{ runner.os }}-sonar-scanner
-      #     restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Cache SonarCloud scanner
+        id: cache_sonar_scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
 
-      # - name: Install SonarCloud scanner
-      #   id: install_sonar_scanner
-      #   if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
-      #   shell: powershell
-      #   run: |
-      #     New-Item -Path .\.sonar\scanner -ItemType Directory
-      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Install SonarCloud scanner
+        id: install_sonar_scanner
+        if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-      # - name: Initialize SonarCloud scanner
-      #   id: init_sonar_scanner
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   shell: powershell
-      #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+      - name: Initialize SonarCloud scanner
+        id: init_sonar_scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
       - name: Restore dotnet tools
         id: restore_dotnet
@@ -75,16 +75,16 @@ jobs:
         id: run_project_tests
         run: dotnet fake run Source\Builder\build.fsx target test
 
-      # - name: Perform CodeQL Analysis
-      #   id: codeql_analysis
-      #   uses: github/codeql-action/analyze@v1
+      - name: Perform CodeQL Analysis
+        id: codeql_analysis
+        uses: github/codeql-action/analyze@v1
 
-      # - name: Send SonarCloud results
-      #   id: send_sonar_results
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      - name: Send SonarCloud results
+        id: send_sonar_results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
       # from running "clean", below action is unnecessary
