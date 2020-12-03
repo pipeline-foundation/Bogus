@@ -1,183 +1,170 @@
-name: Bogus CI/CD
+name: Bogus CI/CD Pipeline
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   init:
     runs-on: windows-latest
     steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v2
 
-    ###############
-    # Expose repo #
-    ###############
+      - name: Bump release version and create release tag
+        id: tag_generator
+        uses: mathieudutour/github-tag-action@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Checkout repository
-      uses: actions/checkout@v2 
+      # - name: Initialize CodeQL
+      #   id: init_codeql
+      #   uses: github/codeql-action/init@v1
 
+      # - name: Cache SonarCloud packages
+      #   id: cache_sonar_packages
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ~\sonar\cache
+      #     key: ${{ runner.os }}-sonar
+      #     restore-keys: ${{ runner.os }}-sonar
 
+      # - name: Cache SonarCloud scanner
+      #   id: cache_sonar_scanner
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: .\.sonar\scanner
+      #     key: ${{ runner.os }}-sonar-scanner
+      #     restore-keys: ${{ runner.os }}-sonar-scanner
 
-    ################################
-    # Init .NET and build solution #
-    ################################
+      # - name: Install SonarCloud scanner
+      #   id: install_sonar_scanner
+      #   if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
+      #   shell: powershell
+      #   run: |
+      #     New-Item -Path .\.sonar\scanner -ItemType Directory
+      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-    - name: Restore dotnet tools    
-      run: dotnet tool restore
-    
-    - name: Build fakes
-      run: dotnet fake run Source\Builder\build.fsx target ci
+      # - name: Initialize SonarCloud scanner
+      #   id: init_sonar_scanner
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
+      - name: Restore dotnet tools
+        id: restore_dotnet
+        run: dotnet tool restore
 
+      - name: Build project
+        id: build_project
+        run: dotnet fake run Source\Builder\build.fsx target ci
+        env:
+          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-    ############################
-    # Upload packages artifact #
-    ############################ 
-    
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Package
-        path: __package/
+      # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
+      # from running "clean", below action is unnecessary
+      - name: Upload package artifact
+        id: up_package_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: __package/
 
+      - name: Run project tests
+        id: run_project_tests
+        run: dotnet fake run Source\Builder\build.fsx target test
 
+      # - name: Upload test results *.XML
+      #   id: ul_testresults_artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: TestResults
+      #     path: __test/
 
-    ###################
-    # Run Bogus tests #
-    ###################
+      - name: Perform CodeQL Analysis
+        id: codeql_analysis
+        uses: github/codeql-action/analyze@v1
 
-    - name: Run test's
-      run: dotnet fake run Source\Builder\build.fsx target test
-      
+      - name: Send SonarCloud results
+        id: send_sonar_results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
+      # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
+      # from running "clean", below action is unnecessary
+      - name: Download and extract package artifact
+        id: dl_package_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Package
+          path: __package/
 
-    ################################
-    # Upload test results artifact #
-    ################################
-    
-    - uses: actions/upload-artifact@v2
-      with:
-        name: TestResults
-        path: __test/
+      # - name: Download and extract test results artifact
+      #   id: dl_testresults_artifact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: TestResults
+      #     path: __test/
 
+      # - name: publish on version change
+      #   id: publish_nuget
+      #   uses: rohith/publish-nuget@v2
+      #   continue-on-error: true
+      #   with:
+      #       PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
+      #       TAG_COMMIT: true
+      #       NUGET_KEY: ${{secrets.API_KEY}}
+      #       PACKAGE_NAME: Fake-package-01
 
+      - name: Create and publish release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_generator.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
+          body: "[CHANGE LOG](HISTORY.md)"
 
-  release:
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
+      - name: Upload Bogus.zip as release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __package/Bogus.zip
+          asset_name: Bogus.zip
+          asset_content_type: application/zip
 
-    ###############
-    # Expose repo #
-    ###############
+      - name: Upload Bogus.nupkg as release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
+          asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
+          asset_content_type: application/snupkg
 
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Upload Bogus.snupkg as release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
+          asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
+          asset_content_type: application/nupkg
 
-
-
-    #####################
-    # Download packages #
-    #####################
-
-    - uses: actions/download-artifact@v2 
-      with:
-        name: Package
-        path: __package/
-
-
-
-    #########################
-    # Download test results #
-    #########################
-
-    - uses: actions/download-artifact@v2 
-      with:
-        name: TestResults
-        path: __test/        
-
-
-
-    ###########################
-    # Create release sequence #
-    ###########################
-
-    - name: Bump version and push tag
-      id: tag_generator
-      uses: ChloePlanet/github-tag-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ steps.tag_generator.outputs.new_tag }} 
-        release_name: Release ${{ steps.tag_generator.outputs.new_tag }} 
-        body: "[CHANGE LOG](HISTORY.md)"
-        draft: false
-        prerelease: false
-
-
-
-    ####################################
-    # Upload compile folder to release #
-    ####################################
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __package/Bogus.zip
-        asset_name: Bogus.zip
-        asset_content_type: application/zip
-
-
-
-    ##########################################
-    # Upload symbol nuget package to release #
-    ##########################################
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __package/Bogus.0.0.0-localbuild.snupkg
-        asset_name: Bogus.${{ steps.tag_generator.outputs.new_tag }}-testonly.snupkg
-        asset_content_type: application/snupkg
-
-
-
-    ###################################
-    # Upload nuget package to release #
-    ###################################
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __package/Bogus.0.0.0-localbuild.nupkg
-        asset_name: Bogus.${{ steps.tag_generator.outputs.new_tag }}-testonly.nupkg
-        asset_content_type: application/nupkg
-
-
-
-    ##################################
-    # Upload test results to release #
-    ##################################
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: __test/results.xml
-        asset_name: results.xml
-        asset_content_type: application/xml
+      - name: Upload internal test results as release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __test/results.xml
+          asset_name: results.xml
+          asset_content_type: application/xml
