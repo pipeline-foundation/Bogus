@@ -64,16 +64,16 @@ jobs:
 
       # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
       # from running "clean", below action is unnecessary
-      - name: Upload packag artifact
+      - name: Upload package artifact
         id: up_package_artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Package
           path: __package/
 
-      # - name: Run project tests
-      #   id: run_project_tests
-      #   run: dotnet fake run Source\Builder\build.fsx target test
+      - name: Run project tests
+        id: run_project_tests
+        run: dotnet fake run Source\Builder\build.fsx target test
 
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
