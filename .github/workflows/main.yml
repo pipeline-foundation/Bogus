@@ -64,7 +64,7 @@ jobs:
 
       # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
       # from running "clean", below action is unnecessary
-      - name: Upload package artifact
+      - name: Upload packag artifact
         id: up_package_artifacts
         uses: actions/upload-artifact@v2
         with:
