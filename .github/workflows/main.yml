@@ -3,7 +3,7 @@ name: Bogus CI/CD Pipeline
 on: [push, pull_request]
 
 jobs:
-  init:
+  ci-cd:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -75,13 +75,6 @@ jobs:
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
 
-      # - name: Upload test results *.XML
-      #   id: ul_testresults_artifact
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: TestResults
-      #     path: __test/
-
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
@@ -102,14 +95,7 @@ jobs:
           name: Package
           path: __package/
 
-      # - name: Download and extract test results artifact
-      #   id: dl_testresults_artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: TestResults
-      #     path: __test/
-
-      # - name: publish on version change
+      # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
       #   uses: rohith/publish-nuget@v2
       #   continue-on-error: true
@@ -130,6 +116,7 @@ jobs:
           body: "[CHANGE LOG](HISTORY.md)"
 
       - name: Upload Bogus.zip as release asset
+        id: upload_bogus_zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -140,6 +127,7 @@ jobs:
           asset_content_type: application/zip
 
       - name: Upload Bogus.nupkg as release asset
+        id: upload_bogus_snupkg
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -150,6 +138,7 @@ jobs:
           asset_content_type: application/snupkg
 
       - name: Upload Bogus.snupkg as release asset
+        id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -160,6 +149,7 @@ jobs:
           asset_content_type: application/nupkg
 
       # - name: Upload internal test results as release asset
+      #   id: upload_internal_test_results
       #   uses: actions/upload-release-asset@v1
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
