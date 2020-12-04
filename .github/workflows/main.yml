@@ -21,7 +21,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: ${{ IS_PUSH }}
+      - if: ${{ github.IS_PUSH }}
         name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
@@ -74,7 +74,7 @@ jobs:
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      - if: ${{ IS_PUSH && IS_RELEASE }}
+      - if: ${{ github.IS_PUSH && github.IS_RELEASE }}
         name: Upload package artifact
         id: up_package_artifacts
         uses: actions/upload-artifact@v2
@@ -86,7 +86,7 @@ jobs:
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
 
-      - if: ${{ IS_PUSH && IS_RELEASE }}
+      - if: ${{ github.IS_PUSH && github.IS_RELEASE }}
         name: Upload build test results artifact
         id: up_build_test_results_artifacts
         uses: actions/upload-artifact@v2
@@ -106,7 +106,7 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   cd:
-    if: ${{ IS_PUSH && IS_RELEASE }}
+    if: ${{ github.IS_PUSH && github.IS_RELEASE }}
     needs: ci
     runs-on: windows-latest
     steps:      
