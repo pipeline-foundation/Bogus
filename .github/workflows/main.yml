@@ -1,10 +1,6 @@
 name: Bogus CI/CD Pipeline
 
-on: 
-  push:
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   ci:
@@ -17,12 +13,13 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      # - name: Bump release version  and create release tag
-      #   id: tag_generator
-      #   uses: mathieudutour/github-tag-action@v5
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }} 
-      #     default_bump: false
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Bump release version and create release tag
+        id: tag_generator
+        uses: mathieudutour/github-tag-action@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          default_bump: false
 
       # - name: Initialize CodeQL
       #   id: init_codeql
@@ -60,29 +57,29 @@ jobs:
       #   shell: powershell
       #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
-      # - name: Restore dotnet tools
-      #   id: restore_dotnet
-      #   run: dotnet tool restore
+      - name: Restore dotnet tools
+        id: restore_dotnet
+        run: dotnet tool restore
 
-      # - name: Build project
-      #   id: build_project
-      #   run: dotnet fake run Source\Builder\build.fsx target ci
-      #   env:
-      #     FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+      - name: Build project
+        id: build_project
+        run: dotnet fake run Source\Builder\build.fsx target ci
+        env:
+          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      # - if: github.event_name == 'push' && github.event_name == 'create'
-      #   name: Upload package artifact
-      #   id: up_package_artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Package
-      #     path: __package/
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Upload package artifact
+        id: up_package_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: __package/
 
       # - name: Run project tests
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
 
-      # - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       #   name: Upload build test results artifact
       #   id: up_build_test_results_artifacts
       #   uses: actions/upload-artifact@v2
@@ -101,7 +98,7 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Event testing
+      - name: 'Event trigger testing:'
         run: |
           echo 'Event: Check run = ' ${{ github.event_name == 'check_run' }}
           echo 'Event: Check suite = ' ${{ github.event_name == 'check_suite' }}
@@ -131,13 +128,14 @@ jobs:
           echo 'Event: Watch = ' ${{ github.event_name == 'watch' }}
           echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
 
+      - name: 'Which branch is the push to:'
+        run: echo ${{ github.ref }}
+
       - name: 'Is there a tag ?'
         run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == '' }}         
 
-      - name: 'Which branch is the push to:'
-        run: echo ${{ github.ref }}
   cd:
-    if: github.event_name == 'push' && github.event_name == 'create'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: ci
     runs-on: windows-latest
     steps:      
