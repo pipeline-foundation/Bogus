@@ -132,7 +132,7 @@ jobs:
           echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
 
       - name: 'Is there a tag ?'
-        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == undefined }}         
+        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == '' }}         
 
       - name: 'Which branch is the push to:'
         run: echo ${{ github.ref }}
