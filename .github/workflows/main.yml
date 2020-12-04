@@ -9,7 +9,6 @@ on:
       - master
 
 env:
-  VISIBLE_VAR: "This is a variable"
   IS_PUSH: github.event_name == 'push'
   IS_RELEASE: github.event_name == 'release'
   SHOULD_RUN: true
