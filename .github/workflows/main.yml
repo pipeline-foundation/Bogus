@@ -76,14 +76,6 @@ jobs:
         id: run_project_tests
         run: dotnet fake run Source\Builder\build.fsx target test
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload build test results artifact
-        id: up_build_test_results_artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: TestResults
-          path: __test/
-
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
@@ -102,14 +94,6 @@ jobs:
         with:
           name: Package
           path: __package/
-
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Download build test results artifact
-        id: dl_build_test_results_artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: TestResults
-          path: __test/
 
       # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       #   name: Publish *.nupkg on NuGet
