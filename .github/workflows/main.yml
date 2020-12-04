@@ -2,9 +2,6 @@ name: Bogus CI/CD Pipeline
 
 on: [push, pull_request]
 
-env:
-  TEST_VAR: ${{ jobs.ci.steps.tag_generator.outputs.new_version }}
-
 jobs:
   ci:
     runs-on: windows-latest
@@ -20,6 +17,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
+
+      - name: Store version value in workflow
+        id: store_version_to_workflow
+        uses: nick-invision/persist-action-data@v1
+        with:
+          data: ${{ steps.tag_generator.outputs.new_version }}
+          variable: NEW_VERSION
 
       # - name: Initialize CodeQL
       #   id: init_codeql
@@ -102,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test var
-        run: echo ${{ env.TEST_VAR }}
+        run: echo ${{ NEW_VERSION }}
 
   cd:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
