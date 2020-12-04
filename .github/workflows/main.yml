@@ -1,18 +1,27 @@
 name: Bogus CI/CD Pipeline
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  IS_PUSH: github.event_name == 'push'
+  IS_RELEASE: github.event_name == 'release'
+  SHOULD_RUN: true
 
 jobs:
-  ci-cd:
+  ci:
     runs-on: windows-latest
-    env:
-      IS_PUSH: github.event_name == 'push'
     steps:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: ${{ env.IS_PUSH }}
+      - if: ${{ IS_PUSH }}
         name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
@@ -65,8 +74,8 @@ jobs:
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      - if: ${{ env.IS_PUSH }}
-        name: Upload packag artifact
+      - if: ${{ IS_PUSH && IS_RELEASE }}
+        name: Upload package artifact
         id: up_package_artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -76,6 +85,14 @@ jobs:
       # - name: Run project tests
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
+
+      - if: ${{ IS_PUSH && IS_RELEASE }}
+        name: Upload build test results artifact
+        id: up_build_test_results_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestResults
+          path: __test/
 
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
@@ -88,16 +105,26 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - if: ${{ env.IS_PUSH }}
-        name: Download and extract package artifact
+  cd:
+    if: ${{ IS_PUSH && IS_RELEASE }}
+    needs: ci
+    runs-on: windows-latest
+    steps:      
+      - name: Download and extract package artifact
         id: dl_package_artifact
         uses: actions/download-artifact@v2
         with:
           name: Package
           path: __package/
 
-      # - if: ${{ env.IS_PUSH }}
-      #   name: Publish *.nupkg on NuGet
+      - name: Download build test results artifact
+        id: dl_build_test_results_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: TestResults
+          path: __test/          
+
+      # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
       #   uses: rohith/publish-nuget@v2
       #   continue-on-error: true
@@ -107,8 +134,7 @@ jobs:
       #       NUGET_KEY: ${{secrets.API_KEY}}
       #       PACKAGE_NAME: Fake-package-01
 
-      - if: ${{ env.IS_PUSH }}
-        name: Create and publish release
+      - name: Create and publish release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -118,8 +144,8 @@ jobs:
           release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
           body: "[CHANGE LOG](HISTORY.md)"
 
-      - if: ${{ env.IS_PUSH }}
-        name: Upload Bogus.zip as release asset
+
+      - name: Upload Bogus.zip as release asset
         id: upload_bogus_zip
         uses: actions/upload-release-asset@v1
         env:
@@ -130,8 +156,7 @@ jobs:
           asset_name: Bogus.zip
           asset_content_type: application/zip
 
-      - if: ${{ env.IS_PUSH }}
-        name: Upload Bogus.nupkg as release asset
+      - name: Upload Bogus.nupkg as release asset
         id: upload_bogus_snupkg
         uses: actions/upload-release-asset@v1
         env:
@@ -142,8 +167,7 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - if: ${{ env.IS_PUSH }}
-        name: Upload Bogus.snupkg as release asset
+      - name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
@@ -154,8 +178,7 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_content_type: application/nupkg
 
-      # - if: ${{ env.IS_PUSH }}
-      #   name: Upload internal test results as release asset
+      # - name: Upload internal test results as release asset
       #   id: upload_internal_test_results
       #   uses: actions/upload-release-asset@v1
       #   env:
