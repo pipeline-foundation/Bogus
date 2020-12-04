@@ -106,7 +106,7 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   cd:
-    if: ${{ env.IS_PUSH && env.IS_RELEASE }}
+    if: env.IS_PUSH && env.IS_RELEASE
     needs: ci
     runs-on: windows-latest
     steps:      
