@@ -12,15 +12,12 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: ${{ !env.IS_PUSH }}
+      - if: ${{ env.IS_PUSH }}
         name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - if: ${{ env.IS_PUSH }}
-        run: Write-Output "This runs on push"
 
       # - name: Initialize CodeQL
       #   id: init_codeql
@@ -68,9 +65,8 @@ jobs:
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
-      # from running "clean", below action is unnecessary
-      - name: Upload packag artifact
+      - if: ${{ env.IS_PUSH }}
+        name: Upload packag artifact
         id: up_package_artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -92,16 +88,16 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
-      # from running "clean", below action is unnecessary
-      - name: Download and extract package artifact
+      - if: ${{ env.IS_PUSH }}
+        name: Download and extract package artifact
         id: dl_package_artifact
         uses: actions/download-artifact@v2
         with:
           name: Package
           path: __package/
 
-      # - name: Publish *.nupkg on NuGet
+      # - if: ${{ env.IS_PUSH }}
+      #   name: Publish *.nupkg on NuGet
       #   id: publish_nuget
       #   uses: rohith/publish-nuget@v2
       #   continue-on-error: true
@@ -111,7 +107,8 @@ jobs:
       #       NUGET_KEY: ${{secrets.API_KEY}}
       #       PACKAGE_NAME: Fake-package-01
 
-      - name: Create and publish release
+      - if: ${{ env.IS_PUSH }}
+        name: Create and publish release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -121,7 +118,8 @@ jobs:
           release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
           body: "[CHANGE LOG](HISTORY.md)"
 
-      - name: Upload Bogus.zip as release asset
+      - if: ${{ env.IS_PUSH }}
+        name: Upload Bogus.zip as release asset
         id: upload_bogus_zip
         uses: actions/upload-release-asset@v1
         env:
@@ -132,7 +130,8 @@ jobs:
           asset_name: Bogus.zip
           asset_content_type: application/zip
 
-      - name: Upload Bogus.nupkg as release asset
+      - if: ${{ env.IS_PUSH }}
+        name: Upload Bogus.nupkg as release asset
         id: upload_bogus_snupkg
         uses: actions/upload-release-asset@v1
         env:
@@ -143,7 +142,8 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - name: Upload Bogus.snupkg as release asset
+      - if: ${{ env.IS_PUSH }}
+        name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
@@ -154,7 +154,8 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_content_type: application/nupkg
 
-      # - name: Upload internal test results as release asset
+      # - if: ${{ env.IS_PUSH }}
+      #   name: Upload internal test results as release asset
       #   id: upload_internal_test_results
       #   uses: actions/upload-release-asset@v1
       #   env:
