@@ -15,7 +15,7 @@ env:
 
 jobs:
   ci:
-    if: ${{ IS_PUSH }}
+    if: github.event_name == 'push'
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -107,7 +107,7 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   cd:
-    #if: env.IS_PUSH && env.IS_RELEASE
+    if: github.event_name == 'push' && github.event_name == 'release'
     needs: ci
     runs-on: windows-latest
     steps:      
