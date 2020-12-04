@@ -102,7 +102,7 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - run: WRITE_OUTPUT ${{ steps.tag_generator.outputs.new_version }}
+      - run: WRITE-OUTPUT ${{ steps.tag_generator.outputs.new_version }}
 
   test:
     needs: ci
