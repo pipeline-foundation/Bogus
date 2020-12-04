@@ -22,7 +22,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
+      - if: github.event_name == 'push' && github.event_name == 'release'
         name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
@@ -75,7 +75,7 @@ jobs:
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
+      - if: github.event_name == 'push' && github.event_name == 'release'
         name: Upload package artifact
         id: up_package_artifacts
         uses: actions/upload-artifact@v2
