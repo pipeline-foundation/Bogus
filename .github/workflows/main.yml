@@ -18,8 +18,8 @@ jobs:
   ci:
     runs-on: windows-latest
     steps:
-      - run: WRITE-OUTPUT "github.VISIBLE_VAR - " ${{ github.VISIBLE_VAR }}
-      - run: WRITE-OUTPUT "github.env.VISIBLE_VAR - " ${{ github.env.VISIBLE_VAR }}
+      - run: WRITE-OUTPUT "workflow.VISIBLE_VAR - " ${{ github.VISIBLE_VAR }}
+      - run: WRITE-OUTPUT "workflow.env.VISIBLE_VAR - " ${{ github.env.VISIBLE_VAR }}
 
       - name: Checkout repository
         id: checkout_repo
