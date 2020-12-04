@@ -133,6 +133,9 @@ jobs:
           echo 'Event: Watch = ' ${{ github.event_name == 'watch' }}
           echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
 
+      - name: 'Is there a tag ?'
+        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version }}         
+
   cd:
     if: github.event_name == 'push' && github.event_name == 'create'
     needs: ci
