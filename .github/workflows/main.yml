@@ -2,6 +2,9 @@ name: Bogus CI/CD Pipeline
 
 on: [push, pull_request]
 
+env:
+  TEST_VAR: ${{ jobs.ci.steps.tag_generator.outputs.new_version }}
+
 jobs:
   ci:
     runs-on: windows-latest
@@ -10,8 +13,8 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Bump release version and create release tag
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
@@ -54,23 +57,23 @@ jobs:
       #   shell: powershell
       #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
-      - name: Restore dotnet tools
-        id: restore_dotnet
-        run: dotnet tool restore
+      # - name: Restore dotnet tools
+      #   id: restore_dotnet
+      #   run: dotnet tool restore
 
-      - name: Build project
-        id: build_project
-        run: dotnet fake run Source\Builder\build.fsx target ci
-        env:
-          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+      # - name: Build project
+      #   id: build_project
+      #   run: dotnet fake run Source\Builder\build.fsx target ci
+      #   env:
+      #     FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload package artifact
-        id: up_package_artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: __package/
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      #   name: Upload package artifact
+      #   id: up_package_artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Package
+      #     path: __package/
 
       # - name: Run project tests
       #   id: run_project_tests
@@ -95,8 +98,14 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test var
+        run: echo ${{ env.TEST_VAR }}
+
   cd:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: ci
     runs-on: windows-latest
     steps:
