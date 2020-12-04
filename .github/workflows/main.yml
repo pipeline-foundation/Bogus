@@ -107,7 +107,7 @@ jobs:
 
       - run: echo ${{ steps.tag_generator.outputs.new_version }}
 
-      - run: echo ${{ steps.store_version_to_workflow.outputs.NEW_VERSION }}
+      - run: echo $NEW_VERSION
 
   test:
     needs: ci
