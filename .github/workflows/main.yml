@@ -18,7 +18,7 @@ jobs:
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
 
       # - name: Initialize CodeQL
@@ -65,7 +65,7 @@ jobs:
         id: build_project
         run: dotnet fake run Source\Builder\build.fsx target ci
         env:
-          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version || '0.0.0-localbuild' }}
 
       # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       - name: Upload package artifact
@@ -95,10 +95,10 @@ jobs:
       #   id: send_sonar_results
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - name: 'Event trigger testing:'
+      - name: "Event trigger testing:"
         run: |
           echo 'Event: Check run = ' ${{ github.event_name == 'check_run' }}
           echo 'Event: Check suite = ' ${{ github.event_name == 'check_suite' }}
@@ -128,17 +128,17 @@ jobs:
           echo 'Event: Watch = ' ${{ github.event_name == 'watch' }}
           echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
 
-      - name: 'Which branch is the push to:'
+      - name: "Which branch is the push to:"
         run: echo ${{ github.ref }}
 
-      - name: 'Is there a tag ?'
-        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == '' }}         
+      - name: "Is there a tag ?"
+        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == '' }}
 
   cd:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: ci
     runs-on: windows-latest
-    steps:      
+    steps:
       - name: Download and extract package artifact
         id: dl_package_artifact
         uses: actions/download-artifact@v2
@@ -151,7 +151,7 @@ jobs:
       #   uses: actions/download-artifact@v2
       #   with:
       #     name: TestResults
-      #     path: __test/          
+      #     path: __test/
 
       # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
@@ -172,7 +172,6 @@ jobs:
           tag_name: ${{ steps.tag_generator.outputs.new_tag }}
           release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
           body: "[CHANGE LOG](HISTORY.md)"
-
 
       - name: Upload Bogus.zip as release asset
         id: upload_bogus_zip
@@ -206,7 +205,6 @@ jobs:
           asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_content_type: application/nupkg
-
       # - name: Upload internal test results as release asset
       #   id: upload_internal_test_results
       #   uses: actions/upload-release-asset@v1
