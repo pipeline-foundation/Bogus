@@ -9,6 +9,7 @@ on:
       - master
 
 env:
+  VISIBLE_VAR: "This is a variable"
   IS_PUSH: github.event_name == 'push'
   IS_RELEASE: github.event_name == 'release'
   SHOULD_RUN: true
@@ -17,6 +18,9 @@ jobs:
   ci:
     runs-on: windows-latest
     steps:
+      - run: WRITE-OUTPUT "github.VISIBLE_VAR - " ${{ github.VISIBLE_VAR }}
+      - run: WRITE-OUTPUT "github.env.VISIBLE_VAR - " ${{ github.env.VISIBLE_VAR }}
+
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
