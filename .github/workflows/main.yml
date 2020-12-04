@@ -6,7 +6,7 @@ jobs:
   ci:
     runs-on: windows-latest
     defaults:
-      run: 
+      run:
         shell: bash
     steps:
       - name: Checkout repository
@@ -25,7 +25,7 @@ jobs:
         id: store_version_to_workflow
         uses: nick-invision/persist-action-data@v1
         with:
-          data: ${{ steps.tag_generator.outputs.new_version }}
+          data: "asd"
           variable: NEW_VERSION
 
       # - name: Initialize CodeQL
@@ -106,6 +106,8 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - run: echo ${{ steps.tag_generator.outputs.new_version }}
+
+      - run: echo ${{ steps.store_version_to_workflow.outputs.NEW_VERSION }}
 
   test:
     needs: ci
