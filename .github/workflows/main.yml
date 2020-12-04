@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      - name: Bump release version and create release tag
+        name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
@@ -111,16 +111,16 @@ jobs:
           name: TestResults
           path: __test/
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Publish *.nupkg on NuGet
-        id: publish_nuget
-        uses: rohith/publish-nuget@v2
-        continue-on-error: true
-        with:
-            PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
-            TAG_COMMIT: true
-            NUGET_KEY: ${{secrets.API_KEY}}
-            PACKAGE_NAME: Fake-package-01
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      #   name: Publish *.nupkg on NuGet
+      #   id: publish_nuget
+      #   uses: rohith/publish-nuget@v2
+      #   continue-on-error: true
+      #   with:
+      #       PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
+      #       TAG_COMMIT: true
+      #       NUGET_KEY: ${{secrets.API_KEY}}
+      #       PACKAGE_NAME: Fake-package-01
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Create and publish release
