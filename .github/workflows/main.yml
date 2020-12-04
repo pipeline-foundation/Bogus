@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test var
-        run: echo ${{ NEW_VERSION }}
+        run: echo $NEW_VERSION
 
   cd:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
