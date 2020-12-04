@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   ci:
     runs-on: windows-latest
+    defaults:
+      run: 
+        shell: bash
     steps:
       - name: Checkout repository
         id: checkout_repo
@@ -102,7 +105,7 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - run: WRITE-OUTPUT ${{ steps.tag_generator.outputs.new_version }}
+      - run: echo ${{ steps.tag_generator.outputs.new_version }}
 
   test:
     needs: ci
