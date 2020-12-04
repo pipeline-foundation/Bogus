@@ -8,21 +8,15 @@ on:
     branches:
       - master
 
-env:
-  IS_PUSH: github.event_name == 'push'
-  IS_RELEASE: github.event_name == 'release'
-  SHOULD_RUN: true
-
 jobs:
   ci:
-    if: github.event_name == 'push'
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: github.event_name == 'push' && github.event_name == 'release'
+      - if: github.event_name == 'push'
         name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
