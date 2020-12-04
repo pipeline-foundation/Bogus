@@ -106,6 +106,13 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     steps:
+      - name: Store version value in workflow
+        id: store_version_to_workflow
+        uses: nick-invision/persist-action-data@v1
+        with:
+          data: ${{ steps.tag_generator.outputs.new_version }}
+          variable: NEW_VERSION
+
       - name: Test var
         run: echo $NEW_VERSION
 
