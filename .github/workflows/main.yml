@@ -5,9 +5,9 @@ on: [push, pull_request]
 jobs:
   ci:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
+    # defaults:
+    #   run:
+    #     shell: bash
     steps:
       - name: Checkout repository
         id: checkout_repo
@@ -78,7 +78,6 @@ jobs:
       # - name: Run project tests
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
-
       # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       #   name: Upload build test results artifact
       #   id: up_build_test_results_artifacts
@@ -86,53 +85,15 @@ jobs:
       #   with:
       #     name: TestResults
       #     path: __test/
-
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
-
       # - name: Send SonarCloud results
       #   id: send_sonar_results
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-      - name: "Event trigger testing:"
-        run: |
-          echo 'Event: Check run = ' ${{ github.event_name == 'check_run' }}
-          echo 'Event: Check suite = ' ${{ github.event_name == 'check_suite' }}
-          echo 'Event: Create = ' ${{ github.event_name == 'create' }}
-          echo 'Event: Delete = ' ${{ github.event_name == 'delete' }}
-          echo 'Event: Deployment = ' ${{ github.event_name == 'deployment' }}
-          echo 'Event: Deployment status = ' ${{ github.event_name == 'deployment_status' }}
-          echo 'Event: Fork = ' ${{ github.event_name == 'fork' }}
-          echo 'Event: Gollum (Wiki page update) = ' ${{ github.event_name == 'gollum' }}
-          echo 'Event: Issue comment = ' ${{ github.event_name == 'issue_comment' }}
-          echo 'Event: Issues = ' ${{ github.event_name == 'issues' }}
-          echo 'Event: Label = ' ${{ github.event_name == 'label' }}
-          echo 'Event: Milestone = ' ${{ github.event_name == 'milestone' }}
-          echo 'Event: Page build = ' ${{ github.event_name == 'page_build' }}
-          echo 'Event: Project = ' ${{ github.event_name == 'project' }}
-          echo 'Event: Project card = ' ${{ github.event_name == 'project_card' }}
-          echo 'Event: Project column = ' ${{ github.event_name == 'project_column' }}
-          echo 'Event: Public = ' ${{ github.event_name == 'public' }}
-          echo 'Event: Pull request = ' ${{ github.event_name == 'pull_request' }}
-          echo 'Event: Pull request review = ' ${{ github.event_name == 'pull_request_review' }}
-          echo 'Event: Pull request review comment = ' ${{ github.event_name == 'pull_request_review_comment' }}
-          echo 'Event: Pull request target = ' ${{ github.event_name == 'pull_request_target' }}
-          echo 'Event: Push = ' ${{ github.event_name == 'push' }}
-          echo 'Event: Registry package = ' ${{ github.event_name == 'registry_package' }}
-          echo 'Event: Release = ' ${{ github.event_name == 'release' }}
-          echo 'Event: Status = ' ${{ github.event_name == 'status' }}
-          echo 'Event: Watch = ' ${{ github.event_name == 'watch' }}
-          echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
-
-      - name: "Which branch is the push to:"
-        run: echo ${{ github.ref }}
-
-      - name: "Is there a tag ?"
-        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == '' }}
 
   cd:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
