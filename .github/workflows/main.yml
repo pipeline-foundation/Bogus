@@ -1,28 +1,25 @@
 name: Bogus CI/CD Pipeline
 
-on: 
-  push:
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   ci:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
+    # defaults:
+    #   run:
+    #     shell: bash
     steps:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
 
-      # - name: Bump release version  and create release tag
-      #   id: tag_generator
-      #   uses: mathieudutour/github-tag-action@v5
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }} 
-      #     default_bump: false
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Bump release version and create release tag
+        id: tag_generator
+        uses: mathieudutour/github-tag-action@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
 
       # - name: Initialize CodeQL
       #   id: init_codeql
@@ -60,87 +57,49 @@ jobs:
       #   shell: powershell
       #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
-      # - name: Restore dotnet tools
-      #   id: restore_dotnet
-      #   run: dotnet tool restore
+      - name: Restore dotnet tools
+        id: restore_dotnet
+        run: dotnet tool restore
 
-      # - name: Build project
-      #   id: build_project
-      #   run: dotnet fake run Source\Builder\build.fsx target ci
-      #   env:
-      #     FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+      - name: Build project
+        id: build_project
+        run: dotnet fake run Source\Builder\build.fsx target ci
+        env:
+          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version || '0.0.0-localbuild' }}
 
-      # - if: github.event_name == 'push' && github.event_name == 'create'
-      #   name: Upload package artifact
-      #   id: up_package_artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Package
-      #     path: __package/
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - name: Upload package artifact
+        id: up_package_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: __package/
 
       # - name: Run project tests
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
-
-      # - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
+      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       #   name: Upload build test results artifact
       #   id: up_build_test_results_artifacts
       #   uses: actions/upload-artifact@v2
       #   with:
       #     name: TestResults
       #     path: __test/
-
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
-
       # - name: Send SonarCloud results
       #   id: send_sonar_results
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Event testing
-        run: |
-          echo 'Event: Check run = ' ${{ github.event_name == 'check_run' }}
-          echo 'Event: Check suite = ' ${{ github.event_name == 'check_suite' }}
-          echo 'Event: Create = ' ${{ github.event_name == 'create' }}
-          echo 'Event: Delete = ' ${{ github.event_name == 'delete' }}
-          echo 'Event: Deployment = ' ${{ github.event_name == 'deployment' }}
-          echo 'Event: Deployment status = ' ${{ github.event_name == 'deployment_status' }}
-          echo 'Event: Fork = ' ${{ github.event_name == 'fork' }}
-          echo 'Event: Gollum (Wiki page update) = ' ${{ github.event_name == 'gollum' }}
-          echo 'Event: Issue comment = ' ${{ github.event_name == 'issue_comment' }}
-          echo 'Event: Issues = ' ${{ github.event_name == 'issues' }}
-          echo 'Event: Label = ' ${{ github.event_name == 'label' }}
-          echo 'Event: Milestone = ' ${{ github.event_name == 'milestone' }}
-          echo 'Event: Page build = ' ${{ github.event_name == 'page_build' }}
-          echo 'Event: Project = ' ${{ github.event_name == 'project' }}
-          echo 'Event: Project card = ' ${{ github.event_name == 'project_card' }}
-          echo 'Event: Project column = ' ${{ github.event_name == 'project_column' }}
-          echo 'Event: Public = ' ${{ github.event_name == 'public' }}
-          echo 'Event: Pull request = ' ${{ github.event_name == 'pull_request' }}
-          echo 'Event: Pull request review = ' ${{ github.event_name == 'pull_request_review' }}
-          echo 'Event: Pull request review comment = ' ${{ github.event_name == 'pull_request_review_comment' }}
-          echo 'Event: Pull request target = ' ${{ github.event_name == 'pull_request_target' }}
-          echo 'Event: Push = ' ${{ github.event_name == 'push' }}
-          echo 'Event: Registry package = ' ${{ github.event_name == 'registry_package' }}
-          echo 'Event: Release = ' ${{ github.event_name == 'release' }}
-          echo 'Event: Status = ' ${{ github.event_name == 'status' }}
-          echo 'Event: Watch = ' ${{ github.event_name == 'watch' }}
-          echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
-
-      - name: 'Is there a tag ?'
-        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == '' }}         
-
-      - name: 'Which branch is the push to:'
-        run: echo ${{ github.ref }}
   cd:
-    if: github.event_name == 'push' && github.event_name == 'create'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: ci
     runs-on: windows-latest
-    steps:      
+    steps:
       - name: Download and extract package artifact
         id: dl_package_artifact
         uses: actions/download-artifact@v2
@@ -153,7 +112,7 @@ jobs:
       #   uses: actions/download-artifact@v2
       #   with:
       #     name: TestResults
-      #     path: __test/          
+      #     path: __test/
 
       # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
@@ -174,7 +133,6 @@ jobs:
           tag_name: ${{ steps.tag_generator.outputs.new_tag }}
           release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
           body: "[CHANGE LOG](HISTORY.md)"
-
 
       - name: Upload Bogus.zip as release asset
         id: upload_bogus_zip
@@ -208,7 +166,6 @@ jobs:
           asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_content_type: application/nupkg
-
       # - name: Upload internal test results as release asset
       #   id: upload_internal_test_results
       #   uses: actions/upload-release-asset@v1
