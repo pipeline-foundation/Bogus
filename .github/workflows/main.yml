@@ -87,13 +87,13 @@ jobs:
       #   id: run_project_tests
       #   run: dotnet fake run Source\Builder\build.fsx target test
 
-      - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
-        name: Upload build test results artifact
-        id: up_build_test_results_artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: TestResults
-          path: __test/
+      # - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
+      #   name: Upload build test results artifact
+      #   id: up_build_test_results_artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: TestResults
+      #     path: __test/
 
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
@@ -118,12 +118,12 @@ jobs:
           name: Package
           path: __package/
 
-      - name: Download build test results artifact
-        id: dl_build_test_results_artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: TestResults
-          path: __test/          
+      # - name: Download build test results artifact
+      #   id: dl_build_test_results_artifact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: TestResults
+      #     path: __test/          
 
       # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
