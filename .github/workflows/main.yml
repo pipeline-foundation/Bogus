@@ -5,28 +5,18 @@ on: [push, pull_request]
 jobs:
   ci:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
     steps:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
 
-      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       - name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
-
-      - name: Store version value in workflow
-        id: store_version_to_workflow
-        uses: nick-invision/persist-action-data@v1
-        with:
-          data: "asd"
-          variable: NEW_VERSION
 
       # - name: Initialize CodeQL
       #   id: init_codeql
@@ -64,35 +54,35 @@ jobs:
       #   shell: powershell
       #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
-      # - name: Restore dotnet tools
-      #   id: restore_dotnet
-      #   run: dotnet tool restore
+      - name: Restore dotnet tools
+        id: restore_dotnet
+        run: dotnet tool restore
 
-      # - name: Build project
-      #   id: build_project
-      #   run: dotnet fake run Source\Builder\build.fsx target ci
-      #   env:
-      #     FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+      - name: Build project
+        id: build_project
+        run: dotnet fake run Source\Builder\build.fsx target ci
+        env:
+          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      #   name: Upload package artifact
-      #   id: up_package_artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Package
-      #     path: __package/
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload package artifact
+        id: up_package_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: __package/
 
-      # - name: Run project tests
-      #   id: run_project_tests
-      #   run: dotnet fake run Source\Builder\build.fsx target test
+      - name: Run project tests
+        id: run_project_tests
+        run: dotnet fake run Source\Builder\build.fsx target test
 
-      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      #   name: Upload build test results artifact
-      #   id: up_build_test_results_artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: TestResults
-      #     path: __test/
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload build test results artifact
+        id: up_build_test_results_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestResults
+          path: __test/
 
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
@@ -105,54 +95,35 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - run: echo ${{ steps.tag_generator.outputs.new_version }}
-
-      - run: echo $NEW_VERSION
-
-  test:
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      - name: Store version value in workflow
-        id: store_version_to_workflow
-        uses: nick-invision/persist-action-data@v1
-        with:
-          data: ${{ steps.tag_generator.outputs.new_version }}
-          variable: NEW_VERSION
-
-      - name: Test var
-        run: echo ${{ steps.store_version_to_workflow.outputs.NEW_VERSION }}
-
-  cd:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: ci
-    runs-on: windows-latest
-    steps:
-      - name: Download and extract package artifact
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Download and extract package artifact
         id: dl_package_artifact
         uses: actions/download-artifact@v2
         with:
           name: Package
           path: __package/
 
-      # - name: Download build test results artifact
-      #   id: dl_build_test_results_artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: TestResults
-      #     path: __test/
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Download build test results artifact
+        id: dl_build_test_results_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: TestResults
+          path: __test/
 
-      # - name: Publish *.nupkg on NuGet
-      #   id: publish_nuget
-      #   uses: rohith/publish-nuget@v2
-      #   continue-on-error: true
-      #   with:
-      #       PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
-      #       TAG_COMMIT: true
-      #       NUGET_KEY: ${{secrets.API_KEY}}
-      #       PACKAGE_NAME: Fake-package-01
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Publish *.nupkg on NuGet
+        id: publish_nuget
+        uses: rohith/publish-nuget@v2
+        continue-on-error: true
+        with:
+            PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
+            TAG_COMMIT: true
+            NUGET_KEY: ${{secrets.API_KEY}}
+            PACKAGE_NAME: Fake-package-01
 
-      - name: Create and publish release
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Create and publish release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -162,7 +133,8 @@ jobs:
           release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
           body: "[CHANGE LOG](HISTORY.md)"
 
-      - name: Upload Bogus.zip as release asset
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload Bogus.zip as release asset
         id: upload_bogus_zip
         uses: actions/upload-release-asset@v1
         env:
@@ -173,7 +145,8 @@ jobs:
           asset_name: Bogus.zip
           asset_content_type: application/zip
 
-      - name: Upload Bogus.nupkg as release asset
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload Bogus.nupkg as release asset
         id: upload_bogus_snupkg
         uses: actions/upload-release-asset@v1
         env:
@@ -184,7 +157,8 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - name: Upload Bogus.snupkg as release asset
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
@@ -194,13 +168,15 @@ jobs:
           asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
           asset_content_type: application/nupkg
-      # - name: Upload internal test results as release asset
-      #   id: upload_internal_test_results
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: __test/results.xml
-      #     asset_name: results.xml
-      #     asset_content_type: application/xml
+
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload internal test results as release asset
+        id: upload_internal_test_results
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __test/results.xml
+          asset_name: results.xml
+          asset_content_type: application/xml
