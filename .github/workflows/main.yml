@@ -12,11 +12,15 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - name: Bump release version and create release tag
+      - if: ${{ !env.IS_PUSH }}
+        name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - if: ${{ env.IS_PUSH }}
+        run: Write-Output "This runs on push"
 
       # - name: Initialize CodeQL
       #   id: init_codeql
@@ -139,8 +143,7 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - if: ${{ !env.IS_PUSH }}
-        name: Upload Bogus.snupkg as release asset
+      - name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
