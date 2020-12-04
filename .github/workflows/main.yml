@@ -2,8 +2,6 @@ name: Bogus CI/CD Pipeline
 
 on: 
   push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -134,8 +132,10 @@ jobs:
           echo 'Event: Workflow run = ' ${{ github.event_name == 'workflow_run' }}
 
       - name: 'Is there a tag ?'
-        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version }}         
+        run: echo 'This is the tag = ' ${{ steps.tag_generator.outputs.new_version == undefined }}         
 
+      - name: 'Which branch is the push to:'
+        run: echo ${{ github.ref }}
   cd:
     if: github.event_name == 'push' && github.event_name == 'create'
     needs: ci
