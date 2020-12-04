@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   ci-cd:
     runs-on: windows-latest
+    env:
+      IS_PUSH: github.event_name == 'push'
     steps:
       - name: Checkout repository
         id: checkout_repo
@@ -137,7 +139,8 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - name: Upload Bogus.snupkg as release asset
+      - if: ${{ !IS_PUSH }}
+        name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
