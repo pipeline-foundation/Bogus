@@ -110,7 +110,7 @@ jobs:
         run: echo $NEW_VERSION
 
   cd:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: ci
     runs-on: windows-latest
     steps:
