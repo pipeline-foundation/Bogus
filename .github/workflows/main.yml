@@ -139,7 +139,7 @@ jobs:
           asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - if: ${{ !IS_PUSH }}
+      - if: ${{ !env.IS_PUSH }}
         name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
