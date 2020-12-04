@@ -15,7 +15,7 @@ env:
 
 jobs:
   ci:
-    if: IS_PUSH
+    if: ${{ IS_PUSH }}
     runs-on: windows-latest
     steps:
       - name: Checkout repository
