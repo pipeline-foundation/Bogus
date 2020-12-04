@@ -22,7 +22,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - if: ${{ env.IS_PUSH }}
+      - if: ${{ env.IS_PUSH && env.IS_RELEASE }}
         name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
