@@ -103,6 +103,7 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   test:
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Test var
