@@ -15,6 +15,7 @@ env:
 
 jobs:
   ci:
+    if: env.IS_PUSH
     runs-on: windows-latest
     steps:
       - name: Checkout repository
