@@ -18,6 +18,16 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
 
+      - run: echo ${{ steps.tag_generator.outputs.new_version }} >> tag.txt
+
+      - run: ls -a -l
+
+      - name: Upload tag text
+        uses: actions/upload-artifact@v2
+        with:
+          name: TagText
+          path: tag.txt
+
       # - name: Initialize CodeQL
       #   id: init_codeql
       #   uses: github/codeql-action/init@v1
@@ -28,7 +38,7 @@ jobs:
       #   with:
       #     path: ~\sonar\cache
       #     key: ${{ runner.os }}-sonar
-      #     restore-keys: ${{ runner.os }}-sonar
+      #     restore-keys: ${{ runner.os }}-sonar 
 
       # - name: Cache SonarCloud scanner
       #   id: cache_sonar_scanner
