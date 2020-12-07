@@ -20,7 +20,7 @@ jobs:
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Write to tag.txt
-        run: ${{ steps.tag_generator.outputs.new_version }} | Out-File -FilePath "tag.txt"
+        run: '"${{ steps.tag_generator.outputs.new_version }}" | Out-File -FilePath "tag.txt"'
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Upload tag.txt
