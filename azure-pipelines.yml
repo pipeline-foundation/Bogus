@@ -18,6 +18,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   displayName: SonarCloud prepare
+  enabled: false
   inputs:
     SonarCloud: 'Bogus-azdo'
     organization: 'szlatkow'
@@ -47,9 +48,10 @@ steps:
   
 - task: SonarCloudAnalyze@1
   displayName: SonarCloud Analyze
-  
+  enabled: false
 - task: SonarCloudPublish@1
   displayName: SonarCloud publish
+  enabled: false
   inputs:
     pollingTimeoutSec: '300'
 
