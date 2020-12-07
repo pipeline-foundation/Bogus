@@ -3,54 +3,67 @@ name: Bogus CI/CD Pipeline
 on: [push, pull_request]
 
 jobs:
-  ci-cd:
+  ci:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
 
-      - name: Bump release version and create release tag
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Bump release version and create release tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
 
-      - name: Initialize CodeQL
-        id: init_codeql
-        uses: github/codeql-action/init@v1
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Write to tag.txt
+        run: '"${{ steps.tag_generator.outputs.new_version }}" | Out-File -FilePath "tag.txt"'
 
-#      - name: Cache SonarCloud packages
-#        id: cache_sonar_packages
-#        uses: actions/cache@v1
-#        with:
-#          path: ~\sonar\cache
-#          key: ${{ runner.os }}-sonar
-#          restore-keys: ${{ runner.os }}-sonar
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload tag.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: TagText
+          path: tag.txt
 
-#      - name: Cache SonarCloud scanner
-#        id: cache_sonar_scanner
-#        uses: actions/cache@v1
-#        with:
-#          path: .\.sonar\scanner
-#          key: ${{ runner.os }}-sonar-scanner
-#          restore-keys: ${{ runner.os }}-sonar-scanner
+      # - name: Initialize CodeQL
+      #   id: init_codeql
+      #   uses: github/codeql-action/init@v1
 
-#      - name: Install SonarCloud scanner
-#        id: install_sonar_scanner
-#        if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
-#        shell: powershell
-#        run: |
-#          New-Item -Path .\.sonar\scanner -ItemType Directory
-#          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      # - name: Cache SonarCloud packages
+      #   id: cache_sonar_packages
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ~\sonar\cache
+      #     key: ${{ runner.os }}-sonar
+      #     restore-keys: ${{ runner.os }}-sonar 
 
-#      - name: Initialize SonarCloud scanner
-#        id: init_sonar_scanner
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#        shell: powershell
-#        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+      # - name: Cache SonarCloud scanner
+      #   id: cache_sonar_scanner
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: .\.sonar\scanner
+      #     key: ${{ runner.os }}-sonar-scanner
+      #     restore-keys: ${{ runner.os }}-sonar-scanner
+
+      # - name: Install SonarCloud scanner
+      #   id: install_sonar_scanner
+      #   if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
+      #   shell: powershell
+      #   run: |
+      #     New-Item -Path .\.sonar\scanner -ItemType Directory
+      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+
+      # - name: Initialize SonarCloud scanner
+      #   id: init_sonar_scanner
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   shell: powershell
+      #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
       - name: Restore dotnet tools
         id: restore_dotnet
@@ -62,39 +75,75 @@ jobs:
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
-      # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
-      # from running "clean", below action is unnecessary
-#      - name: Upload package artifact
-#        id: up_package_artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: Package
-#          path: __package/
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload package artifact
+        id: up_package_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: __package/
 
       - name: Run project tests
         id: run_project_tests
         run: dotnet fake run Source\Builder\build.fsx target test
 
-      - name: Perform CodeQL Analysis
-        id: codeql_analysis
-        uses: github/codeql-action/analyze@v1
+      - name: Upload package artifact
+        id: up_test_results_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestResults
+          path: __test/
 
-     
-#      - name: Send SonarCloud results
-#        id: send_sonar_results
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      # - name: Perform CodeQL Analysis
+      #   id: codeql_analysis
+      #   uses: github/codeql-action/analyze@v1
+           
 
-      # if we can stop "dotnet fake run Source\Builder\build.fsx target test"
-      # from running "clean", below action is unnecessary
-#      - name: Download and extract package artifact
-#        id: dl_package_artifact
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: Package
-#          path: __package/
+      # - name: Send SonarCloud results
+      #   id: send_sonar_results
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+
+  cd:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: ci
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v2
+
+      - name: Download and extract tag.txt artifact
+        id: dl_tagtxt_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: TagText
+          path: ./
+
+      - name: Assign tag.txt content to output
+        id: tag_text 
+        run: |
+          $file_text = Get-Content "tag.txt"
+          echo "::set-output name=new_version::$file_text"
+          $tag_text = "v" + $file_text
+          echo "::set-output name=new_tag::$tag_text"  
+
+      - name: Download and extract package artifact
+        id: dl_package_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Package
+          path: __package/
+
+      - name: Download and extract test results artifact
+        id: dl_test_results_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: TestResults
+          path: __test/          
 
       # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
@@ -106,56 +155,56 @@ jobs:
       #       NUGET_KEY: ${{secrets.API_KEY}}
       #       PACKAGE_NAME: Fake-package-01
 
-#      - name: Create and publish release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: ${{ steps.tag_generator.outputs.new_tag }}
-#          release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
-#          body: "[CHANGE LOG](HISTORY.md)"
+      - name: Create and publish release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_text.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_text.outputs.new_tag }}
+          body: "[CHANGE LOG](HISTORY.md)"
 
-#      - name: Upload Bogus.zip as release asset
-#        id: upload_bogus_zip
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: __package/Bogus.zip
-#          asset_name: Bogus.zip
-#          asset_content_type: application/zip
+      - name: Upload Bogus.zip as release asset
+        id: upload_bogus_zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __package/Bogus.zip
+          asset_name: Bogus.zip
+          asset_content_type: application/zip
 
-#      - name: Upload Bogus.nupkg as release asset
-#        id: upload_bogus_snupkg
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
-#          asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
-#          asset_content_type: application/snupkg
+      - name: Upload Bogus.nupkg as release asset
+        id: upload_bogus_snupkg
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __package/Bogus.${{ steps.tag_text.outputs.new_version }}.snupkg
+          asset_name: Bogus.${{ steps.tag_text.outputs.new_version }}.snupkg
+          asset_content_type: application/snupkg
 
-#      - name: Upload Bogus.snupkg as release asset
-#        id: upload_bogus_nupkg
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
-#          asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
-#          asset_content_type: application/nupkg
+      - name: Upload Bogus.snupkg as release asset
+        id: upload_bogus_nupkg
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __package/Bogus.${{ steps.tag_text.outputs.new_version }}.nupkg
+          asset_name: Bogus.${{ steps.tag_text.outputs.new_version }}.nupkg
+          asset_content_type: application/nupkg
 
-#      - name: Upload internal test results as release asset
-#        id: upload_internal_test_results
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: __test/results.xml
-#          asset_name: results.xml
-#          asset_content_type: application/xml
+      - name: Upload internal test results as release asset
+        id: upload_internal_test_results
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: __test/results.xml
+          asset_name: results.xml
+          asset_content_type: application/xml
