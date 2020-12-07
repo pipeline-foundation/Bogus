@@ -18,11 +18,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
 
-      - run: echo ${{ steps.tag_generator.outputs.new_version }} >> tag.txt
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: echo ${{ steps.tag_generator.outputs.new_version }} >> tag.txt
 
-      - run: ls -a -l
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: ls -a -l
 
-      - name: Upload tag text
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload tag text
         uses: actions/upload-artifact@v2
         with:
           name: TagText
