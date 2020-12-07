@@ -79,9 +79,6 @@ jobs:
         id: codeql_analysis
         uses: github/codeql-action/analyze@v1
 
-      - name: 'Populate the CodeQL runner databases, analyze them, and upload the results to GitHub.'
-        run: |
-         ./codeql-runner-windows analyze --repository szlatkow/Bogus --github-url https://github.com --github-auth $GITHUB_PAT --ref refs/heads/master
      
 #      - name: Send SonarCloud results
 #        id: send_sonar_results
