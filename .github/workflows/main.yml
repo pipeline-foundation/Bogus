@@ -110,6 +110,7 @@ jobs:
 
   cd:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: ci
     runs-on: windows-latest
     steps:
       - name: Checkout repository
