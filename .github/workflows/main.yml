@@ -19,13 +19,11 @@ jobs:
           default_bump: false
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: echo ${{ steps.tag_generator.outputs.new_version }} >> tag.txt
+        name: Write to tag.txt
+        run: ${{ steps.tag_generator.outputs.new_version }} | Out-File -FilePath "tag.txt"
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: ls -a -l
-
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload tag text
+        name: Upload tag.txt
         uses: actions/upload-artifact@v2
         with:
           name: TagText
@@ -89,6 +87,13 @@ jobs:
         id: run_project_tests
         run: dotnet fake run Source\Builder\build.fsx target test
 
+      - name: Upload package artifact
+        id: up_test_results_artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestResults
+          path: __test/
+
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
@@ -100,16 +105,46 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Download and extract package artifact
+
+  cd:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: ci
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v2
+
+      - name: Download and extract tag.txt artifact
+        id: dl_tagtxt_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: TagText
+          path: tag.txt
+
+      - name: Assign tag.txt content to output
+        id: tag_text 
+        run: |
+          $file_text = Get-Content "tag.txt"
+          echo "::set-output name=new_version::$file_text"
+          $tag_text = "v" + $file_text
+          echo "::set-output name=new_tag::$tag_text"  
+
+      - name: Download and extract package artifact
         id: dl_package_artifact
         uses: actions/download-artifact@v2
         with:
           name: Package
           path: __package/
 
-      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      #   name: Publish *.nupkg on NuGet
+      - name: Download and extract test results artifact
+        id: dl_test_results_artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: TestResults
+          path: __test/          
+
+      # - name: Publish *.nupkg on NuGet
       #   id: publish_nuget
       #   uses: rohith/publish-nuget@v2
       #   continue-on-error: true
@@ -119,19 +154,17 @@ jobs:
       #       NUGET_KEY: ${{secrets.API_KEY}}
       #       PACKAGE_NAME: Fake-package-01
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Create and publish release
+      - name: Create and publish release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag_generator.outputs.new_tag }}
-          release_name: Release ${{ steps.tag_generator.outputs.new_tag }}
+          tag_name: ${{ steps.tag_text.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_text.outputs.new_tag }}
           body: "[CHANGE LOG](HISTORY.md)"
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload Bogus.zip as release asset
+      - name: Upload Bogus.zip as release asset
         id: upload_bogus_zip
         uses: actions/upload-release-asset@v1
         env:
@@ -142,32 +175,29 @@ jobs:
           asset_name: Bogus.zip
           asset_content_type: application/zip
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload Bogus.nupkg as release asset
+      - name: Upload Bogus.nupkg as release asset
         id: upload_bogus_snupkg
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
-          asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.snupkg
+          asset_path: __package/Bogus.${{ steps.tag_text.outputs.new_version }}.snupkg
+          asset_name: Bogus.${{ steps.tag_text.outputs.new_version }}.snupkg
           asset_content_type: application/snupkg
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload Bogus.snupkg as release asset
+      - name: Upload Bogus.snupkg as release asset
         id: upload_bogus_nupkg
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: __package/Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
-          asset_name: Bogus.${{ steps.tag_generator.outputs.new_version }}.nupkg
+          asset_path: __package/Bogus.${{ steps.tag_text.outputs.new_version }}.nupkg
+          asset_name: Bogus.${{ steps.tag_text.outputs.new_version }}.nupkg
           asset_content_type: application/nupkg
 
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        name: Upload internal test results as release asset
+      - name: Upload internal test results as release asset
         id: upload_internal_test_results
         uses: actions/upload-release-asset@v1
         env:
