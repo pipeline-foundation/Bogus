@@ -104,7 +104,7 @@ jobs:
           testspace __test/results.xml  
         if: always() 
 
-      - if: ${ env.IS_PUSH_TO_MASTER }
+      - if: ${{ env.IS_PUSH_TO_MASTER }}
         name: Upload package artifact
         id: up_test_results_artifacts
         uses: actions/upload-artifact@v2
