@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   ci:
     runs-on: windows-latest
+    env:
+      IS_PUSH_TO_MASTER: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout repository
         id: checkout_repo
@@ -102,7 +104,8 @@ jobs:
           testspace __test/results.xml  
         if: always() 
 
-      - name: Upload package artifact
+      - if: ${ env.IS_PUSH_TO_MASTER }
+        name: Upload package artifact
         id: up_test_results_artifacts
         uses: actions/upload-artifact@v2
         with:
