@@ -10,7 +10,6 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2
         with: 
-          # required by TestSpace for optimal code changes history
           fetch-depth: 50 
 
       - name: Activate TestSpace tool
@@ -42,40 +41,43 @@ jobs:
       #   id: init_codeql
       #   uses: github/codeql-action/init@v1
 
-      # - name: Cache SonarCloud packages
-      #   id: cache_sonar_packages
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ~\sonar\cache
-      #     key: ${{ runner.os }}-sonar
-      #     restore-keys: ${{ runner.os }}-sonar 
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Cache SonarCloud packages
+        id: cache_sonar_packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar 
 
-      # - name: Cache SonarCloud scanner
-      #   id: cache_sonar_scanner
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: .\.sonar\scanner
-      #     key: ${{ runner.os }}-sonar-scanner
-      #     restore-keys: ${{ runner.os }}-sonar-scanner
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Cache SonarCloud scanner
+        id: cache_sonar_scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
 
-      # - name: Install SonarCloud scanner
-      #   id: install_sonar_scanner
-      #   if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
-      #   shell: powershell
-      #   run: |
-      #     New-Item -Path .\.sonar\scanner -ItemType Directory
-      #     dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master' && steps.cache_sonar_scanner.outputs.cache-hit != 'true'
+        name: Install SonarCloud scanner
+        id: install_sonar_scanner
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-      # - name: Initialize SonarCloud scanner
-      #   id: init_sonar_scanner
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   shell: powershell
-      #   run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Initialize SonarCloud scanner
+        id: init_sonar_scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"szlatkow_Bogus" /o:"szlatkow" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
-      - name: Restore dotnet tools
-        id: restore_dotnet
+      - name: Install .NET dependencies
+        id: install_dotnet_dependencies
         run: dotnet tool restore
 
       - name: Build project
@@ -114,13 +116,13 @@ jobs:
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
            
-
-      # - name: Send SonarCloud results
-      #   id: send_sonar_results
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Send SonarCloud results
+        id: send_sonar_results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
 
   cd:
