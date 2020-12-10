@@ -37,9 +37,9 @@ jobs:
           name: TagText
           path: tag.txt
 
-      # - name: Initialize CodeQL
-      #   id: init_codeql
-      #   uses: github/codeql-action/init@v1
+      - name: Initialize CodeQL
+        id: init_codeql
+        uses: github/codeql-action/init@v1
 
       - if: github.repository_owner == github.actor
         name: Cache SonarCloud packages
@@ -119,9 +119,9 @@ jobs:
           name: TestResults
           path: __test/
 
-      # - name: Perform CodeQL Analysis
-      #   id: codeql_analysis
-      #   uses: github/codeql-action/analyze@v1
+      - name: Perform CodeQL Analysis
+        id: codeql_analysis
+        uses: github/codeql-action/analyze@v1
 
       - if: github.repository_owner == github.actor     
         name: Send SonarCloud results
