@@ -41,7 +41,8 @@ jobs:
       #   id: init_codeql
       #   uses: github/codeql-action/init@v1
 
-      - name: Cache SonarCloud packages
+      - if: github.repository_owner == github.actor
+        name: Cache SonarCloud packages
         id: cache_sonar_packages
         uses: actions/cache@v1
         with:
@@ -49,7 +50,8 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar 
 
-      - name: Cache SonarCloud scanner
+      - if: github.repository_owner == github.actor
+        name: Cache SonarCloud scanner
         id: cache_sonar_scanner
         uses: actions/cache@v1
         with:
@@ -57,7 +59,7 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
-      - if: steps.cache_sonar_scanner.outputs.cache-hit != 'true'
+      - if: github.repository_owner == github.actor && steps.cache_sonar_scanner.outputs.cache-hit != 'true'
         name: Install SonarCloud scanner
         id: install_sonar_scanner
         shell: powershell
@@ -65,13 +67,15 @@ jobs:
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-      - name: Lowercase string generator
+      - if: github.repository_owner == github.actor 
+        name: Lowercase string generator
         id: lowercase_string_gen
         run: |
           $LOWERCASE_OWNER = "${{ github.repository_owner }}".ToLower()
           echo "::set-output name=owner_name::$LOWERCASE_OWNER"
 
-      - name: Initialize SonarCloud scanner
+      - if: github.repository_owner == github.actor
+        name: Initialize SonarCloud scanner
         id: init_sonar_scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -118,8 +122,9 @@ jobs:
       # - name: Perform CodeQL Analysis
       #   id: codeql_analysis
       #   uses: github/codeql-action/analyze@v1
-           
-      - name: Send SonarCloud results
+
+      - if: github.repository_owner == github.actor     
+        name: Send SonarCloud results
         id: send_sonar_results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
