@@ -26,7 +26,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          default_bump: false
+          default_bump: false 
 
       # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       #   name: Write to tag.txt
@@ -145,12 +145,12 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v2 
 
-      - name: Download and extract tag.txt artifact
-        id: dl_tagtxt_artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: TagText
-          path: ./
+      # - name: Download and extract tag.txt artifact
+      #   id: dl_tagtxt_artifact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: TagText
+      #     path: ./
 
       # - name: Assign tag.txt content to output
       #   id: tag_text 
