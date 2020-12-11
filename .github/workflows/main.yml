@@ -5,9 +5,8 @@ on: [push, pull_request]
 jobs:
   ci:
     runs-on: windows-latest
-    outputs:
+    # outputs:
       # new_version: ${{ steps.tag_generator.outputs.new_version }}
-      new_version: 4.0.0
     steps:
       - name: Checkout repository
         id: checkout_repo
