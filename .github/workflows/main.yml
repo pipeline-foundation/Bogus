@@ -25,7 +25,7 @@ jobs:
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
           default_bump: false
 
       # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
