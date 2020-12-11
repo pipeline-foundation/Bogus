@@ -125,7 +125,7 @@ jobs:
 
   cd:
     needs: ci
-    if: ${{ needs.ci.outputs.new_version }} == ''
+    if: ${{ jobs.ci.outputs.new_version }} == ''
     runs-on: windows-latest
     env:
       NEW_VERSION: ${{ needs.ci.outputs.new_version }}
