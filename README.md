@@ -1,6 +1,6 @@
 [![Downloads](https://img.shields.io/nuget/dt/Bogus.svg)](https://www.nuget.org/packages/Bogus/) [![Build status](https://ci.appveyor.com/api/projects/status/dxa14myphnlbplc6/branch/master?svg=true)](https://ci.appveyor.com/project/bchavez/bogus)  [![Twitter](https://img.shields.io/twitter/url/https/github.com/bchavez/Bogus.svg?style=social)](https://twitter.com/intent/tweet?text=Simple%20and%20Sane%20Fake%20Data%20Generator%20for%20.NET:&amp;amp;url=https%3A%2F%2Fgithub.com%2Fbchavez%2FBogus) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bchavez/Bogus) <img src="https://raw.githubusercontent.com/bchavez/Bogus/master/Docs/logo.png" align='right' />
-![Bogus CI/CD Pipeline](https://github.com/AleksIvanovSinglet/Bogus/workflows/Bogus%20CI/CD%20Pipeline/badge.svg?branch=master&event=push)
-[![Space Metric](https://aleksivanovsinglet.testspace.com/spaces/132277/badge?token=17c093155c2aa169f9127261c5adea2cd976acb6)](https://aleksivanovsinglet.testspace.com/spaces/132277?utm_campaign=badge&utm_medium=referral&utm_source=test "Test Cases")
+![Bogus CI/CD Pipeline](https://github.com/szlatkow/Bogus/workflows/Bogus%20CI/CD%20Pipeline/badge.svg?branch=master)
+[![Space Metric](https://szlatkow.testspace.com/spaces/132301/badge?token=445ea69a721c4d8396c32652d171d5bddedbceef)](https://szlatkow.testspace.com/spaces/132301?utm_campaign=badge&utm_medium=referral&utm_source=test "Test Cases")
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=szlatkow_Bogus&metric=alert_status)](https://sonarcloud.io/dashboard?id=szlatkow_Bogus)
 
 Bogus for .NET: C#, F#, and VB.NET
