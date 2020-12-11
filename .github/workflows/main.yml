@@ -12,30 +12,30 @@ jobs:
         with: 
           fetch-depth: 50 
 
-#      - name: Activate TestSpace tool
-#        id: testspace_tool
-#        uses: testspace-com/setup-testspace@v1 
-#        with: 
-#          domain: ${{ github.repository_owner }} 
+      - name: Activate TestSpace tool
+        id: testspace_tool
+        uses: testspace-com/setup-testspace@v1 
+        with: 
+          domain: ${{ github.repository_owner }} 
 
-#      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#        name: Bump release version and create release tag
-#        id: tag_generator
-#        uses: mathieudutour/github-tag-action@v5
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          default_bump: false
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Bump release version and create release tag
+        id: tag_generator
+        uses: mathieudutour/github-tag-action@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
 
-#      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#        name: Write to tag.txt
-#        run: '"${{ steps.tag_generator.outputs.new_version }}" | Out-File -FilePath "tag.txt"'
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Write to tag.txt
+        run: '"${{ steps.tag_generator.outputs.new_version }}" | Out-File -FilePath "tag.txt"'
 
-#      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-#        name: Upload tag.txt
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: TagText
-#          path: tag.txt
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Upload tag.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: TagText
+          path: tag.txt
 
       - name: Initialize CodeQL
         id: init_codeql
@@ -83,8 +83,8 @@ jobs:
       - name: Build project
         id: build_project
         run: dotnet fake run Source\Builder\build.fsx target ci
-#        env:
-#          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+        env:
+          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
 #      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 #        name: Upload package artifact
