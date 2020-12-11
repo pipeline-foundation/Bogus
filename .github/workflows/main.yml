@@ -124,7 +124,7 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   cd:
-    if: true == false
+    if: ${{ env.NEW_VERSION }} == ''
     needs: ci
     runs-on: windows-latest
     env:
