@@ -5,8 +5,9 @@ on: [push, pull_request]
 jobs:
   ci:
     runs-on: windows-latest
-    # outputs:
+    outputs:
       # new_version: ${{ steps.tag_generator.outputs.new_version }}
+      new_version: 4.0.0
     steps:
       - name: Checkout repository
         id: checkout_repo
@@ -123,7 +124,7 @@ jobs:
       #   run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   cd:
-    if: ${{ needs.ci.outputs.new_version }} != ''
+    if: ${{ needs.ci.outputs.new_version }} == ''
     needs: ci
     runs-on: windows-latest
     env:
@@ -133,12 +134,6 @@ jobs:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2 
-
-      - run: echo ${{ needs.ci.outputs.new_version }}
-
-      - run: echo "${{ needs.ci.outputs.new_version }} == ''"
-
-      - run: echo "${{ needs.ci.outputs.new_version }} != ''"
 
       # - name: Download and extract package artifact
       #   id: dl_package_artifact
