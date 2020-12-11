@@ -2,6 +2,7 @@
 ![Bogus CI/CD Pipeline](https://github.com/szlatkow/Bogus/workflows/Bogus%20CI/CD%20Pipeline/badge.svg?branch=master)
 [![Space Metric](https://szlatkow.testspace.com/spaces/132301/badge?token=445ea69a721c4d8396c32652d171d5bddedbceef)](https://szlatkow.testspace.com/spaces/132301?utm_campaign=badge&utm_medium=referral&utm_source=test "Test Cases")
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=szlatkow_Bogus&metric=alert_status)](https://sonarcloud.io/dashboard?id=szlatkow_Bogus)
+
 Bogus for .NET: C#, F#, and VB.NET
 ======================
 
