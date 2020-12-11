@@ -83,8 +83,8 @@ jobs:
       - name: Build project
         id: build_project
         run: dotnet fake run Source\Builder\build.fsx target ci
-        env:
-          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
+#        env:
+#          FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
 
 #      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 #        name: Upload package artifact
