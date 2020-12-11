@@ -28,17 +28,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false 
 
-      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      #   name: Write to tag.txt
-      #   run: '"${{ steps.tag_generator.outputs.new_version }}" | Out-File -FilePath "tag.txt"'
-
-      # - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      #   name: Upload tag.txt
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: TagText
-      #     path: tag.txt
-
       - name: Initialize CodeQL
         id: init_codeql
         uses: github/codeql-action/init@v1
@@ -144,21 +133,6 @@ jobs:
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2 
-
-      # - name: Download and extract tag.txt artifact
-      #   id: dl_tagtxt_artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: TagText
-      #     path: ./
-
-      # - name: Assign tag.txt content to output
-      #   id: tag_text 
-      #   run: |
-      #     $file_text = Get-Content "tag.txt"
-      #     echo "::set-output name=new_version::$file_text"
-      #     $tag_text = "v" + $file_text
-      #     echo "::set-output name=new_tag::$tag_text"  
 
       - name: Download and extract package artifact
         id: dl_package_artifact
