@@ -81,6 +81,9 @@ Full History Here: https://github.com/bchavez/Bogus/blob/master/HISTORY.md</Pack
     <ProjectGuid>{E2CEBBAF-6DF7-41E9-815D-9AD4CF90C844}</ProjectGuid>
     <ProjectGuid>{C0F3B6C9-3664-43F4-B5A9-F536D85DE88C}</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(CI)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);STANDARD;STANDARD20</DefineConstants>
   </PropertyGroup>
