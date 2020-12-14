@@ -28,10 +28,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false 
 
-      - name: Initialize CodeQL
-        id: init_codeql
-        uses: github/codeql-action/init@v1
-
       - if: github.repository_owner == github.actor
         name: Cache SonarCloud packages
         id: cache_sonar_packages
@@ -110,14 +106,7 @@ jobs:
           name: TestResults
           path: __test/
 
-       
-      - name: Perform CodeQL Analysis
-        id: codeql_analysis
-        uses: github/codeql-action/analyze@v1
-        with:
-          output: ./results  
-      
-      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'  
+      - if: github.repository_owner == github.actor     
         name: Send SonarCloud results
         id: send_sonar_results
         env:
