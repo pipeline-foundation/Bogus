@@ -1,10 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ProjectGuid>{D520E701-2720-4A38-8BA9-35F3B1CD3BC8}</ProjectGuid>
+    <ProjectGuid>{3F5727B8-E855-4F6D-BFF1-493B87B52DC0}</ProjectGuid>
+    <ProjectGuid>{0ABBF787-430B-4960-A424-A92CE11B0D3D}</ProjectGuid>
+    <ProjectGuid>{B105D2C6-34E6-4B9F-BC2A-948BCFFBDCBD}</ProjectGuid>
+    <ProjectGuid>{2ADD2008-BBD6-4A4F-9299-428CA8DFBA46}</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Bogus" Version="30.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
@@ -13,5 +16,4 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7" />
   </ItemGroup>
-
 </Project>
