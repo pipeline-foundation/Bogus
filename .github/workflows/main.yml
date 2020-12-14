@@ -140,15 +140,15 @@ jobs:
           name: TestResults
           path: __test/          
 
-      - name: Publish *.nupkg on NuGet
-        id: publish_nuget
-        uses: rohith/publish-nuget@v2
-        continue-on-error: true
-        with:
-             PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
-             TAG_COMMIT: true
-             NUGET_KEY: ${{secrets.API_KEY}}
-             PACKAGE_NAME: Fake-package-01
+      # - name: Publish *.nupkg on NuGet
+      #   id: publish_nuget
+      #   uses: rohith/publish-nuget@v2
+      #   continue-on-error: true
+      #   with:
+      #        PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
+      #        TAG_COMMIT: true
+      #        NUGET_KEY: ${{secrets.API_KEY}}
+      #        PACKAGE_NAME: Fake-package-01
 
       - name: Create and publish release
         id: create_release
