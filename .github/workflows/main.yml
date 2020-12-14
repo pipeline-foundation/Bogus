@@ -148,7 +148,7 @@ jobs:
       #        PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
       #        TAG_COMMIT: true
       #        NUGET_KEY: ${{secrets.API_KEY}}
-      #        PACKAGE_NAME: Fake-package-01
+      #        PACKAGE_NAME: Bogus.${{ env.NEW_VERSION }}.nupkg
 
       - name: Create and publish release
         id: create_release
