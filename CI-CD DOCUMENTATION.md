@@ -148,7 +148,7 @@ Note: in the MAJOR release example, the Powershell multiline syntax ` (backtick)
 
 6. Under the "Choose another analysis method" sign click the "With Github Actions" sign. 
 
-7. Folow the instructions at the first step and create a Secret.
+7. Follow the instructions at the first step and create a Secret.
  You don't need to set up the workflow because it is already set by us.
 
 8. To get your status Badge, click the "Get project Badges" button at the bottom right.
