@@ -92,11 +92,11 @@ jobs:
         id: run_project_tests
         run: dotnet fake run Source\Builder\build.fsx target test
 
-      - name: Push result to Testspace server 
+      - if: always()
+        name: Push result to Testspace server 
         id: push_to_testspace
         run: | 
-          testspace __test/results.xml  
-        if: always() 
+          testspace __test/results.xml{/Source/Bogus.Tests} 
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Upload package artifact
