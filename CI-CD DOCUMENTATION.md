@@ -134,23 +134,23 @@ Note: in the MAJOR release example, the Powershell multiline syntax ` (backtick)
 
 
 
-  ##SonarCloud##
+  ## SonarCloud ##
 
 1. Go to https://sonarcloud.io/
 
-2. Click the "Log in" button and create a new account or connect with GitHub account(recomended).
+2. Click the "Log in" button and create a new account or connect with GitHub account (recomended).
 
-3. In the top right corner click the "+" sign.
+3. At the top right corner click the "+" sign.
 
-4. From the drop down select "Analyze new project".
+4. From the dropdown select "Analyze new project".
 
-5. Select the "Bogus" project and click "Set Up" button in the right top corner.
+5. Select the "Bogus" project and click "Set Up" button at the top right corner.
 
-6. Under the sign "Choose another analysis method" click the sign "With Github Actions" 
+6. Under the "Choose another analysis method" sign click the "With Github Actions" sign. 
 
-7. Folow the instructions on the first step and create a Secret.
- You don't need to set up the workflow becouse its already set by us.
+7. Folow the instructions at the first step and create a Secret.
+ You don't need to set up the workflow because it is already set by us.
 
-8. Down on the right you can get your status Badge by clicking the button "Get project Badges".
+8. To get your status Badge, click the "Get project Badges" button at the bottom right.
 
 9. Run your workflow!
