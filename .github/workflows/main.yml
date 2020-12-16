@@ -96,7 +96,7 @@ jobs:
         name: Push result to Testspace server 
         id: push_to_testspace
         run: | 
-          testspace __test/results.xml{/Source/Bogus.Tests} 
+          testspace "__test/results.xml{/Source/Bogus.Tests}"
 
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Upload package artifact
