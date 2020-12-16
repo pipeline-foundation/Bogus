@@ -138,7 +138,7 @@ Note: in the MAJOR release example, the Powershell multiline syntax ` (backtick)
 
 1. Go to https://sonarcloud.io/
 
-2. Click the "Log in" button and create a new account or connect with GitHub account(recomended).
+2. Click the "Log in" button and create a new account or connect with GitHub account (recomended).
 
 3. At the top right corner click the "+" sign.
 
