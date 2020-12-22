@@ -76,6 +76,12 @@ jobs:
         id: install_dotnet_dependencies
         run: dotnet tool restore
 
+      - name: Initialize CodeQL
+        id: init_codeql
+        uses: github/codeql-action/init@v1
+        with:
+          queries: security-extended, security-and-quality
+
       - name: Build project
         id: build_project
         run: dotnet fake run Source\Builder\build.fsx target ci
@@ -115,6 +121,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Perform CodeQL Analysis
+        id: analyze_codeql
+        uses: github/codeql-action/analyze@v1        
 
   cd:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.ci.outputs.new_version != ''
