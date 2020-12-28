@@ -59,6 +59,7 @@ jobs:
       - if: github.repository_owner == github.actor 
         name: Lowercase string generator
         id: lowercase_string_gen
+        shell: powershell
         run: |
           $LOWERCASE_OWNER = "${{ github.repository_owner }}".ToLower()
           echo "::set-output name=owner_name::$LOWERCASE_OWNER"
@@ -74,6 +75,7 @@ jobs:
 
       - name: Install .NET dependencies
         id: install_dotnet_dependencies
+        shell: powershell
         run: dotnet tool restore
 
       - name: Initialize CodeQL
@@ -84,6 +86,7 @@ jobs:
 
       - name: Build project
         id: build_project
+        shell: powershell
         run: dotnet fake run Source\Builder\build.fsx target ci
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
@@ -98,11 +101,13 @@ jobs:
 
       - name: Run project tests
         id: run_project_tests
+        shell: powershell
         run: dotnet fake run Source\Builder\build.fsx target test
 
       - if: github.repository_owner == github.actor && always()
         name: Push result to Testspace server 
         id: push_to_testspace
+        shell: powershell
         run: | 
           testspace "__test/results.xml{Source/Bogus.Tests}"  
 
@@ -120,7 +125,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          shell: powershell
+          run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - name: Perform CodeQL Analysis
         id: analyze_codeql
@@ -128,6 +134,7 @@ jobs:
 
   cd:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.ci.outputs.new_version != ''
+    # "This job will execute when the workflow is triggered on a 'push event', the target branch is 'master' and the commit is intended to be a release." #
     needs: ci
     runs-on: windows-latest
     env:
@@ -159,7 +166,7 @@ jobs:
         with:
              PROJECT_FILE_PATH: 'Source/Bogus/Bogus.csproj'
              TAG_COMMIT: true
-             NUGET_KEY: ${{secrets.API_KEY}}
+             NUGET_KEY: ${{secrets.NUGET_TOKEN}}
              PACKAGE_NAME: Bogus.${{ env.NEW_VERSION }}.nupkg
 
       - name: Create and publish release

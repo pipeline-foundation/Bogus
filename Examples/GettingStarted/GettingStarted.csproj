@@ -1,13 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <ProjectGuid>{B81CAA6E-F161-447D-93BE-363944CA5D95}</ProjectGuid>
-    <ProjectGuid>{ED5BD880-C650-462E-B135-CA5CCB0B6B37}</ProjectGuid>
-    <ProjectGuid>{34B7D172-87D2-478C-8652-C7FCC808D5FF}</ProjectGuid>
-    <ProjectGuid>{BEEB9E58-65E2-4ABA-9015-BDB92E106F6F}</ProjectGuid>
-    <ProjectGuid>{BDB6A110-570F-4438-9C86-837370D45473}</ProjectGuid>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Bogus" Version="31.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

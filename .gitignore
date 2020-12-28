@@ -172,4 +172,3 @@ $RECYCLE.BIN/
 /nuget.push.bat
 
 /Source/Benchmark/BenchmarkDotNet.Artifacts/
-.editorconfig

@@ -4,11 +4,6 @@
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <SignAssembly>false</SignAssembly>
-    <ProjectGuid>{4E79994D-0569-4952-BB07-DC81D59C57F7}</ProjectGuid>
-    <ProjectGuid>{5112F382-B422-427E-8FA8-AF9EA2B22605}</ProjectGuid>
-    <ProjectGuid>{BFF8EFED-7606-4448-AD5B-6FBE2401677E}</ProjectGuid>
-    <ProjectGuid>{E95292AE-2BEF-4905-89B4-F8D94EA65D78}</ProjectGuid>
-    <ProjectGuid>{92AF7A42-D817-4F8D-94B5-1940BB4CF8D8}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Appveyor.Testlogger" Version="2.0.0" />
