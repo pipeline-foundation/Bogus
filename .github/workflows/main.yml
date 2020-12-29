@@ -75,7 +75,6 @@ jobs:
 
       - name: Install .NET dependencies
         id: install_dotnet_dependencies
-        shell: powershell
         run: dotnet tool restore
 
       - name: Initialize CodeQL
@@ -86,7 +85,6 @@ jobs:
 
       - name: Build project
         id: build_project
-        shell: powershell
         run: dotnet fake run Source\Builder\build.fsx target ci
         env:
           FORCE_VERSION: ${{ steps.tag_generator.outputs.new_version }}
@@ -101,7 +99,6 @@ jobs:
 
       - name: Run project tests
         id: run_project_tests
-        shell: powershell
         run: dotnet fake run Source\Builder\build.fsx target test
 
       - if: github.repository_owner == github.actor && always()
