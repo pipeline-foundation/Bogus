@@ -63,7 +63,6 @@ namespace Bogus
          var group = t.GetAllMembers(BindingFlags)
             .Where(m =>
                {
-
                   if( m.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any() )
                   {
                      //no compiler generated stuff
