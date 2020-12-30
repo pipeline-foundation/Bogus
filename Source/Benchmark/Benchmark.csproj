@@ -3,18 +3,21 @@
   <PropertyGroup>
      <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <Configuration>Release</Configuration>
-  </PropertyGroup>
+
+   <PropertyGroup>
+      <PlatformTarget>AnyCPU</PlatformTarget>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <Optimize>true</Optimize>
+      <Configuration>Release</Configuration>
+   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Bogus\Bogus.csproj" />
   </ItemGroup>
