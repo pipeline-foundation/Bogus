@@ -17,7 +17,9 @@ jobs:
       - name: Clean .NET cache
         id: clean_dotnet_cache
         shell: powershell
-        run: dotnet clean ./Source/Bogus.sln --configuration Release && dotnet nuget locals all --clear
+        run: |
+          dotnet clean ./Source/Bogus.sln --configuration Release 
+          dotnet nuget locals all --clear
 
       - name: Install .NET dependencies
         id: install_dotnet_dependencies
