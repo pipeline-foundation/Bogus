@@ -203,9 +203,9 @@ Dependabot is a GitHub native security tool that goes through the dependencies i
 
 - for PRs with version updates, this pipeline comes pre-configured for all current dependency sources in your project, so at "Insights" tab -> "Dependency graph" -> "Dependabot", you should be able to see all tracked sources of dependencies, when they have been checked last and view a full log of the last check
 
-![Dependabot_tab](/Docs/CI-CD_DOCUMENTATION.md/Dependabot_tab.png)
+![Dependabot_tab](/Docs/CI-CD_DOCUMENTATION/Dependabot_tab.png)
 
-![Dependabot_log_page](/Docs/CI-CD_DOCUMENTATION.md/Dependabot_log_page.png)
+![Dependabot_log_page](/Docs/CI-CD_DOCUMENTATION/Dependabot_log_page.png)
 
 #### Set up security alerts and updates
 ##### - GitHub, through Dependabot, also natively offers a security check for vulnerable dependencies
@@ -218,10 +218,10 @@ Dependabot is a GitHub native security tool that goes through the dependencies i
 
 - By enabling "Dependabot alerts", you would be notified for any vulnerable dependencies in your project. At "Security" tab -> "Dependabot alerts", you can manage all alerts. By clicking on an alert, you would be able to see a detailed explanation of the vulnerability and a viable solution.
 
-![Dependabot_alerts_page](/Docs/CI-CD_DOCUMENTATION.md/Dependabot_alerts_page.png)
+![Dependabot_alerts_page](/Docs/CI-CD_DOCUMENTATION/Dependabot_alerts_page.png)
 
-![Dependabot_alert_page](/Docs/CI-CD_DOCUMENTATION.md/Dependabot_alert_page.png)
+![Dependabot_alert_page](/Docs/CI-CD_DOCUMENTATION/Dependabot_alert_page.png)
 
 - By enabling "Dependabot security updates", you authorize Dependabot to create PRs specifically for **security updates**
 
-![Dependabot_PRs](/Docs/CI-CD_DOCUMENTATION.md/Dependabot_PRs.png)
+![Dependabot_PRs](/Docs/CI-CD_DOCUMENTATION/Dependabot_PRs.png)
