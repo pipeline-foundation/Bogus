@@ -207,7 +207,11 @@ Dependabot is a GitHub native security tool that goes through the dependencies i
 
 ![Dependabot_log_page](/Docs/CI-CD_DOCUMENTATION/Dependabot_log_page.png)
 
+<<<<<<< HEAD
 ### Set up security alerts and updates
+=======
+#### Set up security alerts and updates
+>>>>>>> 8a0e30cd135aea95e18d0264a2ddbd6481a9df98
 ##### - GitHub, through Dependabot, also natively offers a security check for vulnerable dependencies
 
 1. Go to "Settings" tab of your repo
