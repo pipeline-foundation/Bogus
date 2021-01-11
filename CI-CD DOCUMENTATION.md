@@ -1,6 +1,3 @@
-# Built with love by Pipeline Foundation.
-# http://pipeline.foundation
-
 # Bogus CI/CD documentation
 
 * after merging the PR, the first run of the main workflow will not complete successfully, because it requires specific setup explained in this documentation
