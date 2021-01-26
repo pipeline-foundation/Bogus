@@ -27,7 +27,7 @@ jobs:
         shell: powershell
         run: dotnet fake run Source\Builder\build.fsx target ci
 
-      - name: Run project tests
+      - name: Run unit tests
         id: run_project_tests
         shell: powershell
         run: dotnet fake run Source\Builder\build.fsx target test
