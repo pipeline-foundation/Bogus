@@ -38,3 +38,5 @@ jobs:
         with:
           name: TestResults
           path: __test/
+
+# Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)          
