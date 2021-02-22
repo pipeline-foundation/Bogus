@@ -8,7 +8,7 @@ Project Description
 Hello. I'm your host **[Brian Chavez](https://github.com/bchavez)** ([twitter](https://twitter.com/bchavez)). **Bogus** is a simple and sane fake data generator for **.NET** languages like **C#**, **F#** and **VB.NET**. **Bogus** is fundamentally a **C#** port of [`faker.js`](https://github.com/marak/Faker.js/)
 and inspired by [`FluentValidation`](https://github.com/JeremySkinner/FluentValidation)'s syntax sugar.
 
-**Bogus** will help you load databases, UI and apps with fake data for your testing needs. If you like **Bogus** star :star: the repository and show your friends! :smile: If you find **Bogus** useful consider supporting the project by purchasing a [**Bogus Premium**](#bogus-premium-extensions) license that gives you extra **Bogus** superpowers! :dizzy: :muscle: 
+**Bogus** will help you load databases, UI and apps with fake data for your testing needs. If you like **Bogus** star :star: the repository and show your friends! :smile: If you find **Bogus** useful consider supporting the project by purchasing a [**Bogus Premium**](#bogus-premium-extensions) license that gives you extra **Bogus** superpowers! :dizzy: :muscle: You can also [sponsor the project here](https://github.com/sponsors/bchavez)! :moneybag: :dollar:
 
 
 ### Download & Install
@@ -188,8 +188,8 @@ public void With_Korean_Locale()
 |`de_CH         `|German (Switzerland)      ||`ko            `|Korean                    |
 |`el            `|Greek                     ||`lv            `|Latvian                   |
 |`en            `|English                   ||`nb_NO         `|Norwegian                 |
-|`en_AU         `|English (Australia)       ||`nep           `|Nepalese                  |
-|`en_au_ocker   `|English (Australia Ocker) ||`nl            `|Dutch                     |
+|`en_AU         `|English (Australia)       ||`ne            `|Nepalese                  |
+|`en_AU_ocker   `|English (Australia Ocker) ||`nl            `|Dutch                     |
 |`en_BORK       `|English (Bork)            ||`nl_BE         `|Dutch (Belgium)           |
 |`en_CA         `|English (Canada)          ||`pl            `|Polish                    |
 |`en_GB         `|English (Great Britain)   ||`pt_BR         `|Portuguese (Brazil)       |
@@ -384,6 +384,7 @@ In the examples above, all three alternative styles of using **Bogus** produce t
 	* `DomainWord` - Generates a domain word used for domain names.
 	* `DomainSuffix` - Generates a domain name suffix like .com, .net, .org
 	* `Ip` - Gets a random IPv4 address string.
+  * `Port` - Generates a random port number.
 	* `IpAddress` - Gets a random IPv4 IPAddress type.
 	* `IpEndPoint` - Gets a random IPv4 IPEndPoint.
 	* `Ipv6` - Generates a random IPv6 address string.
@@ -510,11 +511,13 @@ In the examples above, all three alternative styles of using **Bogus** produce t
 * **`using Bogus.Extensions.Portugal;`**
 	* `Bogus.Person.Nif()` - Número de Identificação Fiscal (NIF)
 	* `Bogus.DataSets.Company.Nipc()` - Número de Identificação de Pessoa Colectiva (NIPC)
+* **`using Bogus.Extensions.Sweden;`**
+	* `Bogus.Person.Personnummer()` - Swedish national identity number
 * **`using Bogus.Extensions.UnitedKingdom;`**
-	* `Bogus.DataSets.Address.CountryOfUnitedKingdom()` - Country of the United Kingdom
+	* `Bogus.DataSets.Vehicle.GbRegistrationPlate()` - GB Vehicle Registration Plate
 	* `Bogus.DataSets.Finance.SortCode()` - Banking Sort Code
 	* `Bogus.DataSets.Finance.Nino()` - National Insurance Number
-	* `Bogus.DataSets.Vehicle.GbRegistrationPlate()` - GB Vehicle Registration Plate
+	* `Bogus.DataSets.Address.CountryOfUnitedKingdom()` - Country of the United Kingdom
 * **`using Bogus.Extensions.UnitedStates;`**
 	* `Bogus.Person.Ssn()` - Social Security Number
 	* `Bogus.DataSets.Company.Ein()` - Employer Identification Number

@@ -1,3 +1,31 @@
+## v33.0.2
+Release Date: 2021-02-21
+
+* PR 359: Add `Bogus.Person.Personnummer()` Swedish national identity number
+
+## v33.0.1
+Release Date: 2021-02-07
+
+* Locale data parity with faker-js@5478d65.
+* `nep` locale renamed to `ne`. 
+* `de` locale; `Date` dataset changed.
+* `es` locale; gender names added.
+* `fr` locale; `Date` dataset changed.
+* `nb_NO` locale; gender names added.
+* `nl` locale; `Address`, `Commerce`, `Date`, `Hacker`, `Internet` datasets changed; gender names added. 
+* `pt_BR` locale; gender names added.
+* `tr` locale; gender names added.
+* `vi` locale; gender names added. `Date`, `Lorem`, datasets changed.
+* Added `Internet.Port()`; generate port numbers from 1 to 65535.
+
+## v32.1.1
+Release Date: 2021-01-31
+
+* Minor improvements to XML docs.
+* Better exception messages around empty collections and empty arrays.
+* PR 339: Fix null reference exception when calling StrictMode(true) on Faker<T> with no rules.
+* PR 352: Fix first name generation for locales that don't support gender names.
+
 ## v32.0.2
 Release Date: 2020-12-12
 
